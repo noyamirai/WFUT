@@ -7,7 +7,7 @@ Whether you're a super fan or simply looking to stay informed, the WSL Personal 
 
 So whether you're a super fan or simply looking to stay informed on the FA Women's Super League, we invite you to check out our application. Thank you for your interest in our project, and we hope you find it useful!
 
-![WSLH - App preview](./app/docs/assets/WSLH-app_preview.png)
+![WSLH - App preview](./docs/assets/WSLH-app_preview.png)
 
 ## :computer: Features
 
