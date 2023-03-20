@@ -1,11 +1,20 @@
-const express = require('express');
-const router = express.Router()
+import express from 'express';
+const dashRouter = express.Router();
 
-router.get('/', (req, res) => {
+import dotenv from 'dotenv';
+dotenv.config();
+
+import ApiClass from '../helpers/api.js';
+const api = new ApiClass(process.env.API_KEY);
+
+dashRouter.get('/', async (req, res) => {
+    const events = await api.getUpcomingEvents();
+    console.log(events);
 
     res.render('layout', {
-        'view': 'home'
+        'view': 'home',
+        'event': events
     });
 });
 
-module.exports = router;
+export default dashRouter;

@@ -1,0 +1,36 @@
+<main>
+
+    <!-- UP NEXT -->
+    <section class="widget widget--game banner banner--blue <%= event ? 'has-data' : '' %>">
+
+        <figure class="team-wrapper">
+            <picture>
+                <!-- <img src="" alt="Team logo"> -->
+            </picture>
+            <figcaption>
+                <% if (event) { %>
+                    <h3><%= event.strHomeTeam %></h3>
+                <% } %>
+            </figcaption>
+        </figure>
+
+        <h2>VS</h2>
+
+        <figure class="team-wrapper">
+            <picture>
+                <!-- <img src="" alt="Team logo"> -->
+            </picture>
+            <figcaption>
+                <% if (event) { %>
+                    <h3><%= event.strAwayTeam %></h3>
+                <% } %>
+            </figcaption>
+        </figure>
+
+        <div>
+            <p>SAT, 18:30</p>
+        </div>
+
+    </section>
+
+</main>

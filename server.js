@@ -1,9 +1,15 @@
-const express = require('express');
-const fs = require('fs');
-require('dotenv').config();
+// const express = require('express');
+// const fs = require('fs');
+import express from 'express';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+dotenv.config();
 
-// import Fotmob from 'fotmob';
-// const fotmob = new Fotmob();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -18,11 +24,12 @@ app.use('/images', express.static(__dirname + '/public/images/'));
 
 app.locals.fs = fs;
 
+import dashRouter from './routes/dashboard.js';
+
 // ROUTES
-app.use('/', require('./routes/dashboard'));
+app.use('/', dashRouter);
 
 app.get('*', (req, res) => {
-    // let league = await fotmob.getLeague("9227", "overview", "league", "Netherlands/Amsterdam")
 
     res.render('layout', {
         'view': 'blanco',
