@@ -4,12 +4,15 @@ import express from 'express';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import dashRouter from './routes/dashboard.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// hey
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -18,13 +21,10 @@ const port = process.env.PORT || 3000;
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
-app.use('/public', express.static(__dirname + '/public/'));
-app.use('/styles', express.static(__dirname + '/public/styles/'));
-app.use('/images', express.static(__dirname + '/public/images/'));
+app.use(express.static('static'));
+app.use('/static', express.static(__dirname + '/static/'));
 
 app.locals.fs = fs;
-
-import dashRouter from './routes/dashboard.js';
 
 // ROUTES
 app.use('/', dashRouter);

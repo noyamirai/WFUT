@@ -1,36 +1,42 @@
 <main>
 
-    <!-- UP NEXT -->
-    <section class="widget widget--game banner banner--blue <%= event ? 'has-data' : '' %>">
+    <% if (typeof bodyClass == 'undefined') { %>
+        <p>No event</p>
+    <% } else { %>
 
-        <figure class="team-wrapper">
-            <picture>
-                <!-- <img src="" alt="Team logo"> -->
-            </picture>
-            <figcaption>
-                <% if (event) { %>
-                    <h3><%= event.strHomeTeam %></h3>
-                <% } %>
-            </figcaption>
-        </figure>
+        <!-- UP NEXT -->
+        <section class="widget widget--game banner banner--blue <%= event != 'undefined' ? 'has-data' : '' %>">
 
-        <h2>VS</h2>
+            <figure class="team-wrapper">
+                <picture>
+                    <!-- <img src="" alt="Team logo"> -->
+                </picture>
+                <figcaption>
+                    <% if (event != 'undefined') { %>
+                        <h3><%= event.strHomeTeam %></h3>
+                    <% } %>
+                </figcaption>
+            </figure>
 
-        <figure class="team-wrapper">
-            <picture>
-                <!-- <img src="" alt="Team logo"> -->
-            </picture>
-            <figcaption>
-                <% if (event) { %>
-                    <h3><%= event.strAwayTeam %></h3>
-                <% } %>
-            </figcaption>
-        </figure>
+            <h2>VS</h2>
 
-        <div>
-            <p>SAT, 18:30</p>
-        </div>
+            <figure class="team-wrapper">
+                <picture>
+                    <!-- <img src="" alt="Team logo"> -->
+                </picture>
+                <figcaption>
+                    <% if (event != 'undefined') { %>
+                        <h3><%= event.strAwayTeam %></h3>
+                    <% } %>
+                </figcaption>
+            </figure>
 
-    </section>
+            <div>
+                <p>SAT, 18:30</p>
+            </div>
+
+        </section>
+
+    <% } %>
 
 </main>
