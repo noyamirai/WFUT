@@ -21,21 +21,35 @@ class ApiClass {
         return new Date(a.dateEvent).getTime() - new Date(b.dateEvent).getTime();
     } 
 
+    getLeagueTeams = async () => {
+
+        const jsonData = await this.getJsonData(`search_all_teams.php?l=English_Womens_Super_League`);
+        const resultKey = this.getResultKey(jsonData);
+
+        return jsonData[resultKey];
+
+    }
+
     getUpcomingEvents = async () => {
 
-        // const jsonData = await this.apiCall(`eventsnextleaue.php?id=${this.leagueId}`);
-        const jsonData = await this.apiCall(`eventsnextleague.php?id=${this.leagueId}`);
-
-        if (jsonData.failed) {
-            return jsonData;
-        }
-
+        const jsonData = await this.getJsonData(`eventsnextleague.php?id=${this.leagueId}`);
         const resultKey = this.getResultKey(jsonData);
 
         let result = jsonData[resultKey].sort(this.sortByDate);
         result = result.slice(0, 1);
 
         return result[0];
+    }
+
+    getJsonData = async (params) => {
+
+        const jsonData = await this.apiCall(params);
+
+        if (jsonData.failed) {
+            return jsonData;
+        }
+
+        return jsonData;
     }
 
     apiCall = async (uri) => {

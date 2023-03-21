@@ -8,12 +8,11 @@ import ApiClass from '../helpers/api.js';
 const api = new ApiClass(process.env.API_KEY);
 
 dashRouter.get('/', async (req, res) => {
-    // const events = await api.getUpcomingEvents();
-    // console.log(events);
+    const teams = await api.getLeagueTeams();
 
     res.render('layout', {
-        'view': 'home'
-        // 'event': events
+        'view': 'home',
+        'allData': {leagueTeams: teams}
     });
 });
 

@@ -1,41 +1,13 @@
 <main>
 
-    <% if (typeof bodyClass == 'undefined') { %>
-        <p>No event</p>
-    <% } else { %>
+    <%- include ('partials/header.ejs') -%>
+    
+    <% if (typeof allData == 'undefined') { %>
 
-        <!-- UP NEXT -->
-        <section class="widget widget--game banner banner--blue <%= event != 'undefined' ? 'has-data' : '' %>">
+        <%- include ('partials/widget.ejs', { partial: 'message', messageTitle: 'Hmm', messageSubTitle: 'No events found'}) -%>
+    <% } else { %>   
 
-            <figure class="team-wrapper">
-                <picture>
-                    <!-- <img src="" alt="Team logo"> -->
-                </picture>
-                <figcaption>
-                    <% if (event != 'undefined') { %>
-                        <h3><%= event.strHomeTeam %></h3>
-                    <% } %>
-                </figcaption>
-            </figure>
-
-            <h2>VS</h2>
-
-            <figure class="team-wrapper">
-                <picture>
-                    <!-- <img src="" alt="Team logo"> -->
-                </picture>
-                <figcaption>
-                    <% if (event != 'undefined') { %>
-                        <h3><%= event.strAwayTeam %></h3>
-                    <% } %>
-                </figcaption>
-            </figure>
-
-            <div>
-                <p>SAT, 18:30</p>
-            </div>
-
-        </section>
+        <%- include ('partials/widget.ejs', { partial: 'teamlist', heading: 'WSL Teams', data: allData.leagueTeams}) -%>
 
     <% } %>
 

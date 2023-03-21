@@ -14,7 +14,7 @@
   --success: #4CB669;
   --error: #DF4343;
   --white: #FFF;
-  --grey: #F4F3F5;
+  --grey: #191C22;
   --dark-grey: #D3D2D4;
   --dark-grey-text: #A5A4A6;
 
@@ -201,54 +201,50 @@ nav {
   #MAIN
 ============================================================================= */
 main {
-  padding: 10px;
+  /* padding: 24px; */
     /* padding: var(--default-padding) 0 calc(var(--nav-height) + var(--default-padding)) 0; */
 }
 
 section + section { margin-top: var(--default-padding); }
-section { padding: 0 12px; }
-
+section { padding: 0 24px }
 section.scrollable {
   padding-right: 0;
 }
 
-section + .banner {
-    margin-top: 18px;
+section:has(.cards--list) {
+  padding: 0;
 }
 
-.banner {
-    position: relative;
-    padding: var(--default-padding) 12px;
+
+/* =============================================================================
+  #HEADER
+============================================================================= */
+header {
+  position: relative;
+
+  height: 230px;
+  width: 100%;
+
+  /* margin-bottom: 24px; */
 }
 
-    .banner::before {
-        content: "";
-        position: absolute;
-        inset: 0;
+  header .logo {
+    position: absolute;
+    left: 50%;
+    top: 50%;
 
-        margin: 0 20px;
+    width: auto;
+    height: 45%;
+    
+    /* padding: 40px; */
+    
+    transform: translate(-50%, -50%);
+  }
 
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: cover;
-        background-image: url('/static/wsl-logo.png');
-        filter: brightness(0) invert(1);
-        opacity: 8%;
-    }
-
-.banner > * {
-    position: relative;
-    text-align: center;
-    color: var(--white);
-}
-
-.banner--blue {
-    background-color: var(--secondary-color);
-}
-
-.banner--purple {
-  background-color: var(--accent-color);
-}
+  header .background {
+    width: 100%;
+    height: 100%;
+  }
 
 /* =============================================================================
   #WIDGET
@@ -379,7 +375,69 @@ section + .banner {
 /* =============================================================================
   #CARDS
 ============================================================================= */
+.cards {
+    display: flex;
+    width: 100%;
 
+    gap: 10px;
+    /* display: grid;
+    grid-template-columns: repeat(4, 1fr); */
+}
+
+    .card__item {
+        position: relative;
+        border-radius: 6px;
+        background-color: var(--grey);
+    }
+
+    .card__item:hover a {
+      transform: scale(1.2);
+    }
+
+        .card__item a {
+            display: flex;
+            padding: 14px;
+
+            transition: all 250ms ease-in-out;
+        }
+
+        /* Logo in card only */
+    .cards--thumb .card__item {
+      width: 62px;
+      min-width: 62px;
+      height: 62px;
+    }
+
+      .cards--thumb img {
+        width: 100%;
+        height: 100%;
+
+        object-fit: contain;
+        object-position: center;
+
+        margin: 0;
+      }
+.card__item:has(a) {
+        padding: 0;
+    }
+
+/* Scrollable cards */
+.cards--list {
+  padding-right: 12px;
+  
+  overflow-x: auto;
+
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+
+  -webkit-overflow-scrolling: touch;
+}
+
+.cards--list::-webkit-scrollbar { display: none; }
+
+    .cards--list .card__item {
+      scroll-snap-align: start;
+    }
 
 /* =============================================================================
   #BUTTON

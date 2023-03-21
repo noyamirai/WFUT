@@ -1,0 +1,7 @@
+<section>
+    <% if (typeof heading != 'undefined' && heading != '') { %>
+        <h2><%= heading %></h2>
+    <% } %>
+
+    <%- include (`${partial}.ejs`, {data: data}) -%>
+</section>

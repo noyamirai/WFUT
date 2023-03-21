@@ -1,0 +1,11 @@
+<ul class="cards cards--thumb cards--list">
+    <% for(let i=0; i < data.length; i++) {%>
+
+        <li class="card__item">
+            <a href="team-details/<%= data[i].idTeam %>">
+                <img class="team__logo" src="<%= data[i].strTeamBadge %>" alt="<%= data[i].strTeam %>">
+            </a>
+        </li>
+
+    <% } %>
+</ul>
