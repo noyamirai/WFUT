@@ -6,17 +6,26 @@
     
     <body class="<%= fs.existsSync("views/"+view+".ejs") ? (typeof bodyClass == 'undefined' ? '' : bodyClass) : 'error' %>">
         
-
         <!-- TODO: styling -->
-        <noscript>
+        <!-- <noscript>
             NO JAVASCRIPT!!!! PANIEK!!!
-        </noscript>
+        </noscript> -->
 
         <% if ( fs.existsSync("views/"+view+".ejs") ) { %>
             <%- include (view) -%>
         <% } else { %>
             <%- include ('blanco', { 'partial': './partials/message', 'messageTitle': 'Oops!', 'messageSubTitle': 'Template does not exists...'}) -%>
         <% } %>
+
+        <script>
+
+            // window.addEventListener('load', function() {
+            //         navigator.serviceWorker.register('/src/service-worker.js')
+            //             .then(function(registration) {
+            //             return registration.update();
+            //             })
+            //         });
+        </script>
 
     </body>
 </html>
