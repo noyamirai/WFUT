@@ -1,4 +1,8 @@
-<ul class="cards cards--thumb cards--list">
+<% if (typeof heading != 'undefined' && heading != '') { %>
+    <h2><%= heading %></h2>
+<% } %>
+
+<ul class="cards cards--thumb cards--list" data-team-list>
     <% for(let i=0; i < data.length; i++) {%>
 
         <li class="card__item">

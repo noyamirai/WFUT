@@ -1,0 +1,107 @@
+const CORE_CACHE_VERSION = 'v1'
+const CORE_ASSETS = [
+  '/',
+  '/offline',
+  '/static/index.css',
+  '/static/football-pitch.svg',
+  '/static/wfut-logo.svg',
+  '/favicon.ico'
+]
+
+self.addEventListener('install', event => {
+  console.log('Installing service worker')
+
+  event.waitUntil(
+    caches.open(CORE_CACHE_VERSION).then(function(cache) {
+      return cache.addAll(CORE_ASSETS).then(() => self.skipWaiting());
+    })
+  );
+});
+
+self.addEventListener('activate', event => {
+  console.log('Activating service worker')
+  event.waitUntil(clients.claim());
+});
+
+self.addEventListener('fetch', event => {
+  console.log('Fetch event: ', event.request.url);
+
+  event.respondWith(
+    
+      fetchAndCache(event.request, CORE_CACHE_VERSION)
+      .catch(e => {
+        return caches.open(CORE_CACHE_VERSION)
+          .then(cache => cache.match('/offline'))
+      })
+
+  )
+  
+});
+
+
+const fetchAndCache = async (request, cacheName) => {
+
+ try {
+
+    const cache = await caches.open(cacheName);
+    const cachedResponse = await cache.match(request);
+    if (cachedResponse) return cachedResponse;
+
+    const responseFromNetwork = await fetch(request);
+
+    if (isCoreGetRequest(request)) {
+      const clone = responseFromNetwork.clone();
+      caches.open(cacheName).then((cache) => cache.put(request, clone));
+    }
+
+    return responseFromNetwork;
+
+  } catch (error) {
+
+    const checkResponse = await caches.match(request);
+    if (checkResponse) {
+      return checkResponse;
+    }
+
+    const fallbackResponse = await caches.match('offline');
+    if (fallbackResponse) {
+      return fallbackResponse;
+    }
+
+    return new Response("Network error happened", {
+      status: 408,
+      headers: { "Content-Type": "text/plain" },
+    });
+  }
+}
+
+/**
+ * Checks if a request is a GET and HTML request
+ *
+ * @param {Object} request        The request object
+ * @returns {Boolean}            Boolean value indicating whether the request is a GET and HTML request
+ */
+function isHtmlGetRequest(request) {
+  return request.method === 'GET' && (request.headers.get('accept') !== null && request.headers.get('accept').indexOf('text/html') > -1);
+}
+
+/**
+ * Checks if a request is a core GET request
+ *
+ * @param {Object} request        The request object
+ * @returns {Boolean}            Boolean value indicating whether the request is in the core mapping
+ */
+function isCoreGetRequest(request) {
+  return request.method === 'GET' && CORE_ASSETS.includes(getPathName(request.url));
+}
+
+/**
+ * Get a pathname from a full URL by stripping off domain
+ *
+ * @param {Object} requestUrl        The request object, e.g. https://www.mydomain.com/index.css
+ * @returns {String}                Relative url to the domain, e.g. index.css
+ */
+function getPathName(requestUrl) {
+  const url = new URL(requestUrl);
+  return url.pathname;
+}

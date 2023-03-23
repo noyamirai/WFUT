@@ -18,14 +18,23 @@
         <% } %>
 
         <script>
+            window.addEventListener('load', function() {
+                navigator.serviceWorker
+                .register("/service-worker.js")
+                .then((registration) => {
+                    // registration worked
+                    console.log("Registration succeeded.");
 
-            // window.addEventListener('load', function() {
-            //         navigator.serviceWorker.register('/src/service-worker.js')
-            //             .then(function(registration) {
-            //             return registration.update();
-            //             })
-            //         });
+                    // caches.delete('v1');
+                })
+                .catch((error) => {
+                    // registration failed
+                    console.error(`Registration failed with ${error}`);
+                });
+            });
         </script>
+
+        <!-- <script src="/src/js/homeData.js"></script> -->
 
     </body>
 </html>

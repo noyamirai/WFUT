@@ -1,7 +1,3 @@
-<section>
-    <% if (typeof heading != 'undefined' && heading != '') { %>
-        <h2><%= heading %></h2>
-    <% } %>
-
-    <%- include (`${partial}.ejs`, {data: data}) -%>
+<section data-widget-<%= partial %>>
+    <%- include (`${partial}.ejs`, {data: data, heading: heading ?? null }) -%>
 </section>

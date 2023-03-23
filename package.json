@@ -7,7 +7,7 @@
     "prestart": "npm run build",
     "prestart:dev": "npm run build",
     "start": "node server.js",
-    "start:dev": "nodemon server.js & npm run watch",
+    "start:dev": "nodemon --inspect server.js & npm run watch",
     "prebuild": "rimraf ./static",
     "build": "npm-run-all build:*",
     "build:css": "node scripts/build-css.js",

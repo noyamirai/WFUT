@@ -6,8 +6,6 @@ import { fileURLToPath } from 'url';
 import dashRouter from './routes/dashboard.js';
 import dotenv from 'dotenv';
 import session from 'express-session';
-import sessionManager from './middleware/sessionManager.js';
-
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -35,6 +33,7 @@ app.use(session({
 app.use(express.static('static'));
 app.use('/static', express.static(__dirname + '/static/'));
 app.use('/src', express.static(__dirname + '/src/'));
+app.use('/', express.static(__dirname + '/'));
 
 // ROUTES
 app.use('/', dashRouter);

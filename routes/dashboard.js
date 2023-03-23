@@ -8,32 +8,24 @@ dotenv.config();
 import ApiClass from '../helpers/api.js';
 const api = new ApiClass(process.env.API_KEY);
 
-dashRouter.get('/', sessionManager.hasSession, async (req, res) => {
+// sessionManager.hasSession
+dashRouter.get('/', async (req, res) => {
     let teams = [];
     
-    // cookies not supported/allowed
-    if (!req.session.cookie_allowed) {
-        console.log('FETCH ALL');
-        teams = await api.getLeagueTeams();        
-    } else {
+    console.log('FETCH HEREE');
 
-        if (req.session.leagueTeams) {
-            console.log('teams in storage');
-            teams = req.session.leagueTeams;
-        } else {
-            console.log('FETCH');
-            teams = await api.getLeagueTeams();
-
-            req.session.leagueTeams = teams;
-            console.log('fetched teams');
-        }
-
-    }
+    teams = await api.getLeagueTeams();
 
     res.render('layout', {
         'view': 'home',
         'allData': {leagueTeams: teams}
     });
+});
+
+dashRouter.get('/health', (req, res) => {
+
+    res.json({'success': true})
+
 });
 
 export default dashRouter;

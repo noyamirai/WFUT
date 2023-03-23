@@ -1,7 +1,7 @@
 <main>
 
     <%- include ('partials/header.ejs') -%>
-    
+
     <% if (typeof allData == 'undefined') { %>
 
         <%- include ('partials/widget.ejs', { partial: 'message', messageTitle: 'Hmm', messageSubTitle: 'No events found'}) -%>
