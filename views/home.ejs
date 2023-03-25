@@ -1,14 +1,25 @@
 <main>
 
     <%- include ('partials/header.ejs') -%>
-
+   
     <% if (typeof allData == 'undefined') { %>
 
         <%- include ('partials/widget.ejs', { partial: 'message', messageTitle: 'Hmm', messageSubTitle: 'No events found'}) -%>
     <% } else { %>   
 
-        <%- include ('partials/widget.ejs', { partial: 'teamlist', heading: 'WSL Teams', data: allData.leagueTeams}) -%>
+        <% for( let i = 0; i < allData.length; i++ ) { %>
+
+            <%- include ('partials/widget.ejs', { partial: allData[i].partial, widgetClass: allData[i].className, data: allData[i].data }) -%>
+            
+    
+        <% } %>
+    
+
 
     <% } %>
+
+    <!-- <section class="widget widget--game">
+        
+    </section> -->
 
 </main>

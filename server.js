@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dashRouter from './routes/dashboard.js';
+import teamDetailsRouter from './routes/team-details.js';
 import dotenv from 'dotenv';
 import session from 'express-session';
 dotenv.config();
@@ -37,6 +38,7 @@ app.use('/', express.static(__dirname + '/'));
 
 // ROUTES
 app.use('/', dashRouter);
+app.use('/team-details', teamDetailsRouter);
 
 app.get('/offline', (req, res) => {
 
