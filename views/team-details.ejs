@@ -1,6 +1,9 @@
-<main>
-    <%- include ('partials/header.ejs') -%>
+<main >
+    <%- include ('partials/team-header.ejs', { teamData: teamDetails.team_data }) -%>
 
-    <a href="javascript: history.go(-1)">terug</a>
-    <h2>Team details</h2>
+    <!-- <a href="javascript: history.go(-1)">terug</a> -->
+
+    <%- include ('./partials/eventcard.ejs', { data: teamDetails.up_next, isList: false }) -%>
+    <%- include ('./partials/teamform.ejs', { data: teamDetails.previous_games }) -%>
+
 </main>

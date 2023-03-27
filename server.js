@@ -31,6 +31,7 @@ app.use(session({
     resave: false
 }));
 
+
 app.use(express.static('static'));
 app.use('/static', express.static(__dirname + '/static/'));
 app.use('/src', express.static(__dirname + '/src/'));

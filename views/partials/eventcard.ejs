@@ -1,0 +1,27 @@
+<% if (isList) { %>
+ <li class="event-card">
+<% } else { %>
+<div class="event-card">
+<% } %>
+    <div class="team-wrapper">
+        <img src="<%= data.homeTeamData.strTeamBadge %>" alt="<%= data.strHomeTeam %> logo">
+        <h3><%= data.strHomeTeam %></h3>
+    </div>
+
+    <div class="game-info">
+        <span><%= data.localTime %></span>
+        <span><%= data.dateStringShort %></span>
+    </div>
+
+    <div class="team-wrapper">
+        <img src="<%= data.awayTeamData.strTeamBadge%>" alt="<%= data.strAwayTeam %> logo">
+        <h3><%= data.strAwayTeam %></h3>
+    </div>
+
+    <img src="/static/wsl-logo.png" alt="WFUT logo">
+    
+<% if (isList) { %>
+</li>
+<% } else { %>
+</div>
+<% } %>

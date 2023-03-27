@@ -1,21 +1,29 @@
 import express from 'express';
-import sessionManager from '../middleware/sessionManager.js';
 const teamDetailsRouter = express.Router();
 
 import dotenv from 'dotenv';
 dotenv.config();
 
 import ApiClass from '../helpers/api.js';
-const api = new ApiClass(process.env.API_KEY);
 
 teamDetailsRouter.get('/:teamId', async (req, res) => {
 
-    const teamDetails = api.getTeamDetails(req.params.teamId);
-    console.log(teamDetails);
+    console.log('teams in session: ', req.session.league_teams);
+
+    const api = new ApiClass(process.env.API_KEY, (req.session.league_teams ? req.session.league_teams : undefined));
+    const teamDetails = await api.getTeamDetails(req.params.teamId);
+    console.log('DONE');
+
+    if (!req.session.league_teams) {
+        const teams = await api.getLeagueTeams();
+        req.session.league_teams = teams;
+    }
 
     res.render('layout', {
-        'view': 'team-details'
+        'view': 'team-details',
+        'teamDetails': teamDetails
     });
+
 
 });
 

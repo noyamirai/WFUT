@@ -5,10 +5,11 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import ApiClass from '../helpers/api.js';
-const api = new ApiClass(process.env.API_KEY);
 
 // sessionManager.hasSession
 dashRouter.get('/', async (req, res) => {
+    const api = new ApiClass(process.env.API_KEY, (req.session.league_teams ? req.session.league_teams : undefined));
+
     let teams = [];
     let upcomingGames = [];
     let homeData = [];
@@ -33,6 +34,8 @@ dashRouter.get('/', async (req, res) => {
             className: 'game',
             data: upcomingGames
         });
+
+        req.session.league_teams = teams;
 
         // TODO : fetch team badges + acronyms
         req.session.home_data = homeData;
