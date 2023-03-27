@@ -200,7 +200,7 @@ nav {
   #MAIN
 ============================================================================= */
 main {
-  padding: 24px ;
+  padding: 18px;
     /* padding: var(--default-padding) 0 calc(var(--nav-height) + var(--default-padding)) 0; */
 }
 
@@ -256,6 +256,14 @@ header {
   padding: 16px 0;
 }
 
+.widget--game ul + h3 {
+  margin-top: 20px;
+} 
+
+.widget--game h3 + ul {
+  margin-top: 12px;
+}
+
 .widget--game li {
   position: relative;
   display: grid;
@@ -263,11 +271,15 @@ header {
   place-items: center;
 
   text-align: center;
-  padding: 18px;
+  padding: 14px 18px;
 
   border-radius: 6px;
   background-color: #191C22;
   overflow: hidden;
+}
+
+.widget--game li + li {
+  margin-top: 16px;
 }
 
 .widget--game li::before,
@@ -303,10 +315,15 @@ header {
   z-index: 100;
 }
 
+.widget--game .team-wrapper {
+  /* padding: 0 20px; */
+}
+
   .widget--game .team-wrapper h3 {
     text-transform: uppercase;
     margin-top: 6px;
-    font-size: 14px; font-size: 1.4rem;
+    font-size: 12px; font-size: 1.2rem;
+    font-weight: 700;
   }
 
   .widget--game .team-wrapper img {
@@ -322,13 +339,17 @@ header {
   gap: 10px;
 }
 
+  .game-info span {
+    font-size: 13px; font-size: 1.3rem;
+  }
+
   .game-info span:first-of-type {
     color: var(--white);
     font-weight: 600;
-    font-size: 15px; font-size: 1.5rem;
     background-color: #FF5C00;
     padding: 4px 6px;
     border-radius: 4px;
+    line-height: .95;
   }
 
   .game-info span:last-of-type {

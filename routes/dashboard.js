@@ -1,5 +1,4 @@
 import express from 'express';
-import sessionManager from '../middleware/sessionManager.js';
 const dashRouter = express.Router();
 
 import dotenv from 'dotenv';

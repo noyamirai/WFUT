@@ -1,4 +1,5 @@
 import fetch from 'node-fetch';
+import { getFormattedDate, getLocalTime } from './utils.js';
 
 class ApiClass {
 
@@ -43,7 +44,7 @@ class ApiClass {
 
         let squadArray = {};
 
-        console.log(jsonSquadData);
+        // console.log(jsonSquadData);
         
         // Transform the squad array into an object with keys based on player positions
         jsonSquadData.forEach((player, key) => {
@@ -76,27 +77,35 @@ class ApiClass {
         
         let result = eventJsonData.sort(this.sortByDate);
         let gamesByDate = {};
+
+        // console.log(result);
         
         for (const event of result) {
-        // result.forEach(async (event) => {
 
             if (Object.keys(gamesByDate).length == 3 && !Object.keys(gamesByDate).includes(event.dateEvent)) {
                 continue;
             }
-
+            
             const homeTeamData = await this.getTeamData(event.idHomeTeam);
             const awayTeamData = await this.getTeamData(event.idAwayTeam);
             event.homeTeamData = homeTeamData;
             event.awayTeamData = awayTeamData;
 
-            if (Object.keys(gamesByDate).includes(event.dateEvent)) {
-                gamesByDate[event.dateEvent].push(event);    
+            const formattedDateShort = getFormattedDate(event.dateEvent, true);
+            event.dateStringShort = formattedDateShort;
+            
+            const formattedDate = getFormattedDate(event.dateEvent);
+            event.dateString = formattedDate;
+            
+            event.localTime = getLocalTime(event.strTimestamp);
+            
+            if (Object.keys(gamesByDate).includes(formattedDate)) {
+                gamesByDate[formattedDate].push(event);    
             } else {
-                gamesByDate[event.dateEvent] = [];
-                gamesByDate[event.dateEvent].push(event);
+                gamesByDate[formattedDate] = [];
+                gamesByDate[formattedDate].push(event);
             }
 
-        // });
         };
 
         for (const key in gamesByDate) {
@@ -109,8 +118,8 @@ class ApiClass {
 
     sortByTime = (array) => {
         const result = array.sort((a, b) => {
-            if (a['strTimeLocal'] < b['strTimeLocal']) return -1;
-            if (a['strTimeLocal'] > b['strTimeLocal']) return 1;
+            if (a['localTime'] < b['localTime']) return -1;
+            if (a['localTime'] > b['localTime']) return 1;
             return 0
         });
 
@@ -121,15 +130,12 @@ class ApiClass {
 
         const jsonData = await this.apiCall(params);
 
-
         // todo: error handling
         if (jsonData.failed) {
             return jsonData;
         }
 
         const resultKey = this.getResultKey(jsonData);
-                console.log(resultKey);
-
         return jsonData[resultKey];
     }
 
