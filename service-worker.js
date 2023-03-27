@@ -45,10 +45,6 @@ self.addEventListener('message', (event) => {
     }
 });
 
-const fetchAndCacheIfOk = async (request) => {
-
-}
-
 const fetchAndCache = async (request, cacheName) => {
 
  try {
