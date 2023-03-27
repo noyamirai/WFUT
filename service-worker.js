@@ -45,6 +45,10 @@ self.addEventListener('message', (event) => {
     }
 });
 
+const fetchAndCacheIfOk = async (request) => {
+
+}
+
 const fetchAndCache = async (request, cacheName) => {
 
  try {
@@ -53,20 +57,46 @@ const fetchAndCache = async (request, cacheName) => {
     const isHtmlReq = isHtmlGetRequest(request);
     const cacheNameToCheck = (isCoreReq ? cacheName : (isHtmlReq ? OTHER_CACHE_VERSION : cacheName));
 
-    console.log(cacheNameToCheck);
-    console.log('fetching and caching');
     const cache = await caches.open(cacheNameToCheck);
     const cachedResponse = await cache.match(request);
-    if (cachedResponse) return cachedResponse;
 
-    const responseFromNetwork = await fetch(request);
+    if (!!cachedResponse) {
+      // it is cached but we want to update it so request but not await
+      const responseFromNetwork = await fetch(request);
 
-    if (isCoreReq || isHtmlReq) {
-      const clone = responseFromNetwork.clone();
-      caches.open(cacheNameToCheck).then((cache) => cache.put(request, clone));
+      // don't cache non-ok responses
+      if (responseFromNetwork.ok && (isCoreReq || isHtmlReq)) {
+        const responseClone = responseFromNetwork.clone();
+        const cache = await caches.open(cacheNameToCheck);
+        await cache.put(request, responseClone);
+      }
+      
+      // return the cached response
+      return cachedResponse;
+
+    } else {
+       const responseFromNetwork = await fetch(request);
+
+        // don't cache non-ok responses
+        if (responseFromNetwork.ok && (isCoreReq || isHtmlReq)) {
+          const responseClone = responseFromNetwork.clone();
+          const cache = await caches.open(cacheNameToCheck);
+          await cache.put(request, responseClone);
+        }
+
+        return responseFromNetwork;
     }
 
-    return responseFromNetwork;
+    // if (cachedResponse) return cachedResponse;
+
+    // const responseFromNetwork = await fetch(request);
+
+    // if (isCoreReq || isHtmlReq) {
+    //   const clone = responseFromNetwork.clone();
+    //   caches.open(cacheNameToCheck).then((cache) => cache.put(request, clone));
+    // }
+
+    // return responseFromNetwork;
 
   } catch (error) {
 

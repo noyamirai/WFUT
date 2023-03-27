@@ -7,6 +7,7 @@ import dashRouter from './routes/dashboard.js';
 import teamDetailsRouter from './routes/team-details.js';
 import dotenv from 'dotenv';
 import session from 'express-session';
+import cacheManager from './middleware/cacheManager.js';
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -31,6 +32,7 @@ app.use(session({
     resave: false
 }));
 
+app.use(cacheManager.setCache);
 
 app.use(express.static('static'));
 app.use('/static', express.static(__dirname + '/static/'));
