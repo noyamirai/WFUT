@@ -216,6 +216,7 @@ class ApiClass {
 
         // without session usage -> 3s
         // with session usage -> 300ms
+        // with service worker -> 3ms
 
         console.log('set prev games data');
         const prevGames = await this.setTeamData(jsonPrevGamesData, true);

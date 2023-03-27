@@ -1,4 +1,5 @@
-const CORE_CACHE_VERSION = 'v1'
+const CORE_CACHE_VERSION = 'core-cache';
+const OTHER_CACHE_VERSION = 'other-cache';
 const CORE_ASSETS = [
   '/',
   '/offline',
@@ -48,15 +49,21 @@ const fetchAndCache = async (request, cacheName) => {
 
  try {
 
-    const cache = await caches.open(cacheName);
+    const isCoreReq = isCoreGetRequest(request);
+    const isHtmlReq = isHtmlGetRequest(request);
+    const cacheNameToCheck = (isCoreReq ? cacheName : (isHtmlReq ? OTHER_CACHE_VERSION : cacheName));
+
+    console.log(cacheNameToCheck);
+    console.log('fetching and caching');
+    const cache = await caches.open(cacheNameToCheck);
     const cachedResponse = await cache.match(request);
     if (cachedResponse) return cachedResponse;
 
     const responseFromNetwork = await fetch(request);
 
-    if (isCoreGetRequest(request)) {
+    if (isCoreReq || isHtmlReq) {
       const clone = responseFromNetwork.clone();
-      caches.open(cacheName).then((cache) => cache.put(request, clone));
+      caches.open(cacheNameToCheck).then((cache) => cache.put(request, clone));
     }
 
     return responseFromNetwork;
