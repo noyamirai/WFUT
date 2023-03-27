@@ -3,7 +3,7 @@
 
 WFUT is a progressive web application, designed to keep you up-to-date with your favorite teams in the FA Women's Super League. Please note that we **do not** own any rights to the league or its teams. Our project is purely for educational purposes.
 
-Whether you're a super fan or simply looking to stay informed, the WSL Personal Hub is focused on providing a simple and intuitive user experience, with features that include league standings, team overviews, today's games, and the last five games played by each team. While our project may not offer the same level of depth as official league resources, we hope it will provide a useful tool for those looking to follow the action and stay informed.
+Whether you're a super fan or simply looking to stay informed, WFUT is focused on providing a simple and intuitive user experience, with features that include league standings, team overviews, today's games, and the last five games played by each team. While our project may not offer the same level of depth as official league resources, we hope it will provide a useful tool for those looking to follow the action and stay informed.
 
 So whether you're a super fan or simply looking to stay informed on the FA Women's Super League, we invite you to check out our application. Thank you for your interest in our project, and we hope you find it useful!
 
@@ -11,14 +11,14 @@ So whether you're a super fan or simply looking to stay informed on the FA Women
 
 ## :computer: Features
 
-WSL Personal Hub offers the following features (for now): 
+WFUT offers the following features (for now): 
 
 | Features :nail_care:        | Status :rocket:    |
 |-----------------------------|---------------------|
-| View current league standings    | :white_check_mark: |
+| View current league standings    | :hourglass: |
 | Team details    | :white_check_mark: |
-| Today's games    | :white_check_mark: |
-| Previous ten games    | :white_check_mark: |
+| Upcoming games    | :white_check_mark: |
+| Previous games of team    | :white_check_mark: |
 | Favorite teams   | :hourglass: |
 | Match details   | :hourglass: |
 
