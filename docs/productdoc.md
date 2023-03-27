@@ -22,13 +22,11 @@ I'm still not 100% happy with it, but this is not a design related course, so I 
 
 text
 
-## Service Worker
 
-diagram including service worker
-
-## Enhancements and performance optimization
+## Performance optimization
 
 text here
+
 
 ```js
 
@@ -58,6 +56,9 @@ text
 
 // req.session usage bc i dont want to perform multiple calls 
 ```
+
+### Service worker
+diagram including service worker
 
 explain cache strategy -> stale while revalidate (cache control middleware)
 
