@@ -165,7 +165,7 @@ class TeamClass {
         // with service worker -> 3ms
 
         console.log('set prev games data');
-        const prevGames = await this.setTeamData(jsonPrevGamesData, true);
+        const prevGames = await this.setTeamData(jsonPrevGamesData);
 
         const sortedEvents = jsonNextGamesData.sort(this.sortByDate);
         console.log('set upcoming game data');

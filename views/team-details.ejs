@@ -1,9 +1,35 @@
 <main >
     <%- include ('partials/team-header.ejs', { teamData: teamDetails.team_data }) -%>
 
-    <!-- <a href="javascript: history.go(-1)">terug</a> -->
-
     <%- include ('./partials/eventcard.ejs', { data: teamDetails.up_next, isList: false }) -%>
-    <%- include ('./partials/teamform.ejs', { data: teamDetails.previous_games }) -%>
+
+    <nav>
+        <ul class="menu menu--toggle">
+            <li class="active">Team form</li>
+            <li>Upcoming games</li>
+            <li>Squad</li>
+        </ul>
+    </nav>
+
+    <%- include ('./partials/widget.ejs', { partial: 'teamform', wdigetClass: '', data: teamDetails.previous_games }) -%>
+<!-- 
+    <hr>
+
+    <section class="widget widget--squad">
+
+        <h2>Starting XI</h2>
+
+        <ul>
+            <li>
+                <picture>
+                    <img src="/static/man-united-test-logo.png" alt="">
+                </picture>
+
+                <h3>Name Here</h3>
+                <span>Position</span>
+            </li>
+        </ul>
+
+    </section> -->
 
 </main>

@@ -1,14 +1,22 @@
-<ul class="team-form cards--list">
+<ul class="team-form">
     <% data.forEach(event => { %>
+        
         <li>
+            <span><%= event.dateStringShort %></span>
             <div class="team-wrapper">
+                <span class="<%= event.intHomeScore > event.intAwayScore ? 'win' : 'loss' %>"><%= event.intHomeScore %></span>
+                
                 <img src="<%= event.homeTeamData.strTeamBadge %>" alt="<%= event.strHomeTeam %> logo">
-                <h3 class="<%= event.intHomeScore > event.intAwayScore ? 'win' : 'loss' %>"><%= event.intHomeScore %></h3>
+                <h3><%= event.strHomeTeam %></h3>
+
             </div>
     
             <div class="team-wrapper">
+                <span class="<%= event.intAwayScore > event.intHomeScore ? 'win' : 'loss' %>"><%= event.intAwayScore %></span>
+                
                 <img src="<%= event.awayTeamData.strTeamBadge %>" alt="<%= event.strAwayTeam %> logo">
-                <h3 class="<%= event.intAwayScore > event.intHomeScore ? 'win' : 'loss' %>"><%= event.intAwayScore %></h3>
+                <h3><%= event.strAwayTeam %></h3>
+
             </div>
     
         </li>

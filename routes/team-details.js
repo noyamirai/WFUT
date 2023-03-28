@@ -14,6 +14,8 @@ teamDetailsRouter.get('/:teamId', async (req, res) => {
     const teamDetails = await teamController.getTeamDetails(req.params.teamId);
     console.log('DONE');
 
+    console.log(teamDetails.previous_games);
+
     if (!req.session.league_teams) {
         const teams = await teamController.getLeagueTeams();
         req.session.league_teams = teams;
