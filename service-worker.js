@@ -1,7 +1,6 @@
 const CORE_CACHE_VERSION = 'core-cache';
 const OTHER_CACHE_VERSION = 'other-cache';
 const CORE_ASSETS = [
-  '/',
   '/offline',
   '/static/index.css',
   '/static/football-pitch.svg',
@@ -13,7 +12,7 @@ self.addEventListener('install', event => {
   console.log('Installing service worker')
 
   event.waitUntil(
-    caches.open(CORE_CACHE_VERSION).then(function(cache) {
+    caches.open(CORE_CACHE_VERSION).then((cache) => {
       return cache.addAll(CORE_ASSETS).then(() => self.skipWaiting());
     })
   );
@@ -57,42 +56,24 @@ const fetchAndCache = async (request, cacheName) => {
     const cachedResponse = await cache.match(request);
 
     if (!!cachedResponse) {
-      // it is cached but we want to update it so request but not await
-      const responseFromNetwork = await fetch(request);
-
-      // don't cache non-ok responses
-      if (responseFromNetwork.ok && (isCoreReq || isHtmlReq)) {
-        const responseClone = responseFromNetwork.clone();
-        const cache = await caches.open(cacheNameToCheck);
-        await cache.put(request, responseClone);
-      }
-      
-      // return the cached response
+      console.log('cached response! ', request.url);
       return cachedResponse;
-
-    } else {
-       const responseFromNetwork = await fetch(request);
-
-        // don't cache non-ok responses
-        if (responseFromNetwork.ok && (isCoreReq || isHtmlReq)) {
-          const responseClone = responseFromNetwork.clone();
-          const cache = await caches.open(cacheNameToCheck);
-          await cache.put(request, responseClone);
-        }
-
-        return responseFromNetwork;
     }
 
-    // if (cachedResponse) return cachedResponse;
+    const responseFromNetwork = await fetch(request);
 
-    // const responseFromNetwork = await fetch(request);
+    // don't cache non-ok responses
+    if (responseFromNetwork.ok && (isCoreReq || isHtmlReq)) {
+      console.log('saving new response: ', request.url);
+      const responseClone = responseFromNetwork.clone();
+      caches.open(cacheNameToCheck)
+        .then((cache) => {
+          cache.put(request, responseClone);
+        });
+    }
 
-    // if (isCoreReq || isHtmlReq) {
-    //   const clone = responseFromNetwork.clone();
-    //   caches.open(cacheNameToCheck).then((cache) => cache.put(request, clone));
-    // }
-
-    // return responseFromNetwork;
+    console.log('retrun response from network: ', request.url );
+    return responseFromNetwork;
 
   } catch (error) {
 

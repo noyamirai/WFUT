@@ -70,4 +70,28 @@ const getLocalTime = (timeStamp) => {
     return result;
 }
 
-export { getFormattedDate, getFormattedTime, getLocalTime };
+const getResultKey = (data) => {
+    let objectKey;
+
+    for (const key in data) {
+        objectKey = Object.keys(data)[0];
+    }
+
+    return objectKey;
+}
+
+const sortByDate = (a, b) => {
+    return new Date(a.dateEvent).getTime() - new Date(b.dateEvent).getTime();
+} 
+
+const sortByTime = (array) => {
+    const result = array.sort((a, b) => {
+        if (a['localTime'] < b['localTime']) return -1;
+        if (a['localTime'] > b['localTime']) return 1;
+        return 0
+    });
+
+    return result;
+}
+
+export { getFormattedDate, getFormattedTime, getLocalTime, sortByDate, sortByTime, getResultKey };

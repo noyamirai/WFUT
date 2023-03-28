@@ -4,11 +4,11 @@ const dashRouter = express.Router();
 import dotenv from 'dotenv';
 dotenv.config();
 
-import ApiClass from '../helpers/api.js';
+import HomeController from '../controllers/homeController.js';
 
 // sessionManager.hasSession
 dashRouter.get('/', async (req, res) => {
-    const api = new ApiClass(process.env.API_KEY, (req.session.league_teams ? req.session.league_teams : undefined));
+    const homeController = new HomeController(process.env.API_KEY, (req.session.league_teams ? req.session.league_teams : undefined));
 
     let teams = [];
     let upcomingGames = [];
@@ -20,8 +20,10 @@ dashRouter.get('/', async (req, res) => {
 
     } else {
         console.log('No home data in session yet! Fetch and save');
-        teams = await api.getLeagueTeams();
-        upcomingGames = await api.getUpcomingEvents();
+
+        const fetchedHomeData = await homeController.getHomeData();
+        teams = fetchedHomeData.teams;
+        upcomingGames = fetchedHomeData.upcomingGames;
 
         homeData.push({
             partial: 'teamlist',
@@ -36,8 +38,6 @@ dashRouter.get('/', async (req, res) => {
         });
 
         req.session.league_teams = teams;
-
-        // TODO : fetch team badges + acronyms
         req.session.home_data = homeData;
     }
 

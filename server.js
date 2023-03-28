@@ -10,6 +10,8 @@ import session from 'express-session';
 import cacheManager from './middleware/cacheManager.js';
 dotenv.config();
 
+import setManifestConfig from './middleware/manifestConfig.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -23,6 +25,7 @@ app.locals.fs = fs;
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
+app.use(setManifestConfig);
 app.use(cookieParser());
 app.use(session({
     name: 'wfutsession',
@@ -49,7 +52,19 @@ app.get('/offline', (req, res) => {
         'view': 'offline',
         'bodyClass': 'error',
     });
-})
+});
+
+import manifestController from './controllers/manifestController.js';
+
+app.get('/manifest', (req, res) => {
+    const ManifestController = new manifestController( req.app.locals );
+
+    res.set('Content-Type', 'application/json');
+    let manifest = ManifestController.createManifest();
+    res.status(200).json(manifest);
+    res.end();
+});
+
 
 app.get('*', (req, res) => {
 
