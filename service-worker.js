@@ -56,24 +56,51 @@ const fetchAndCache = async (request, cacheName) => {
     const cachedResponse = await cache.match(request);
 
     if (!!cachedResponse) {
-      console.log('cached response! ', request.url);
+      // it is cached but we want to update it so request but not await
+      const responseFromNetwork = await fetch(request);
+
+      // don't cache non-ok responses
+      if (responseFromNetwork.ok && (isCoreReq || isHtmlReq)) {
+        const responseClone = responseFromNetwork.clone();
+        const cache = await caches.open(cacheNameToCheck);
+        await cache.put(request, responseClone);
+      }
+      
+      // return the cached response
       return cachedResponse;
+
+    } else {
+       const responseFromNetwork = await fetch(request);
+
+        // don't cache non-ok responses
+        if (responseFromNetwork.ok && (isCoreReq || isHtmlReq)) {
+          const responseClone = responseFromNetwork.clone();
+          const cache = await caches.open(cacheNameToCheck);
+          await cache.put(request, responseClone);
+        }
+
+        return responseFromNetwork;
     }
 
-    const responseFromNetwork = await fetch(request);
+    // if (!!cachedResponse) {
+    //   console.log('cached response! ', request.url);
+    //   return cachedResponse;
+    // }
 
-    // don't cache non-ok responses
-    if (responseFromNetwork.ok && (isCoreReq || isHtmlReq)) {
-      console.log('saving new response: ', request.url);
-      const responseClone = responseFromNetwork.clone();
-      caches.open(cacheNameToCheck)
-        .then((cache) => {
-          cache.put(request, responseClone);
-        });
-    }
+    // const responseFromNetwork = await fetch(request);
 
-    console.log('retrun response from network: ', request.url );
-    return responseFromNetwork;
+    // // don't cache non-ok responses
+    // if (responseFromNetwork.ok && (isCoreReq || isHtmlReq)) {
+    //   console.log('saving new response: ', request.url);
+    //   const responseClone = responseFromNetwork.clone();
+    //   caches.open(cacheNameToCheck)
+    //     .then((cache) => {
+    //       cache.put(request, responseClone);
+    //     });
+    // }
+
+    // console.log('retrun response from network: ', request.url );
+    // return responseFromNetwork;
 
   } catch (error) {
 

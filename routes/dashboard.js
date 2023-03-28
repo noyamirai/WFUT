@@ -6,7 +6,6 @@ dotenv.config();
 
 import HomeController from '../controllers/homeController.js';
 
-// sessionManager.hasSession
 dashRouter.get('/', async (req, res) => {
     const homeController = new HomeController(process.env.API_KEY, (req.session.league_teams ? req.session.league_teams : undefined));
 
