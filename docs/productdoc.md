@@ -63,3 +63,5 @@ diagram including service worker
 explain cache strategy -> stale while revalidate (cache control middleware)
 
 show service worker impl.
+
+<!-- TOOD: page transition API -->

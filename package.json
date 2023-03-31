@@ -12,9 +12,11 @@
     "build": "npm-run-all build:*",
     "build:css": "node scripts/build-css.js",
     "build:assets": "node scripts/build-static-assets.js",
+    "build:js": "node scripts/build-js.js",
     "watch": "run-p watch:*",
     "watch:css": "chokidar 'src/styles/*.css' --command 'npm run build:css'",
-    "watch:assets": "chokidar 'src/images/*.*' --command 'npm run build:assets'"
+    "watch:assets": "chokidar 'src/images/*.*' --command 'npm run build:assets'",
+    "watch:js": "chokidar 'src/js/*.*' --command 'npm run build:js'"
   },
   "nodemonConfig": {
     "ext": "js,html,ejs"
