@@ -731,6 +731,8 @@ button {
 
   border-radius: 1px 5px 5px 1px;
   transform: translateY(-50%);
+
+  z-index: 500;
 }
 
 .btn--back .icon {
