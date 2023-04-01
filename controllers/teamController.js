@@ -1,17 +1,22 @@
 import apiClass from '../helpers/api.js';
 import { getFormattedDate, getLocalTime } from '../helpers/utils.js';
-
+import { sortByTime, sortByDate } from '../helpers/utils.js';
 
 class TeamClass {
 
     constructor(api_key, sessionLeagues) {
         this.apiKey = api_key;
-        this.sessionLeagues = sessionLeagues
+        this.sessionLeagues = sessionLeagues;
         this.API = new apiClass(this.apiKey);
     }
 
     getTeamData = async (idTeam) => {
         const jsonTeamData = await this.API.getJsonData(`lookupteam.php?id=${idTeam}`);
+
+        if (jsonTeamData.failed) {
+            return [];
+        }
+
         return jsonTeamData[0];
     }
 
@@ -38,6 +43,9 @@ class TeamClass {
         ];
 
         const fetchData = await this.API.getMultipleJsonDatas(fetches);
+
+        console.log('home team: ', idHomeTeam);
+        console.log('away team: ', idAwayTeam);
 
         return {'homeTeam': fetchData[0][0], 'awayTeam': fetchData[1][0]};
     }
@@ -127,7 +135,15 @@ class TeamClass {
         return dataArray;
     }
 
-    getTeamDetails = async (idTeam) => {
+    listPreviousGamesByTeam = async (idTeam) => {
+
+        const jsonPrevGamesData = await this.API.getJsonData(`eventslast.php?id=${idTeam}`);
+        const prevGames = await this.setTeamData(jsonPrevGamesData);
+
+        return prevGames;
+    }
+
+    getAllTeamDetails = async (idTeam) => {
 
         console.log('get details');
         
@@ -170,6 +186,10 @@ class TeamClass {
         const sortedEvents = jsonNextGamesData.sort(this.sortByDate);
         console.log('set upcoming game data');
         const upcomingGame = await this.setTeamData(sortedEvents[0]);
+        sortedEvents.shift();
+
+        const upcomingGames = await this.setUpcomingEvents(sortedEvents);
+        
         let squadArray = {};
         
         // Transform the squad array into an object with keys based on player positions
@@ -186,11 +206,47 @@ class TeamClass {
         const result = {
             'team_data': jsonTeamData,
             'previous_games': prevGames,
+            'upcoming_games': upcomingGames,
             'up_next': upcomingGame,
             'squad': squadArray
         }
 
         return result;
+    }
+
+     setUpcomingEvents = async (eventJsonData = false) => {
+
+        if (!eventJsonData)
+            eventJsonData = await this.API.getJsonData(`eventsnextleague.php?id=${this.leagueId}`);
+
+        if (eventJsonData.failed)
+            return [];
+        
+        let gamesByDate = {};
+        const result = eventJsonData.sort(sortByDate);
+        const populatedTeams = await this.setTeamData(result);
+        
+        for (const event of populatedTeams) {
+
+            if (Object.keys(gamesByDate).length == 3 && !Object.keys(gamesByDate).includes(event.dateEvent)) {
+                continue;
+            }
+
+            if (Object.keys(gamesByDate).includes(event.dateString)) {
+                gamesByDate[event.dateString].push(event);    
+            } else {
+                gamesByDate[event.dateString] = [];
+                gamesByDate[event.dateString].push(event);
+            }
+
+        };
+
+        for (const key in gamesByDate) {
+            const event = gamesByDate[key];
+            gamesByDate[key] = sortByTime(event);
+        }
+                
+        return gamesByDate;
     }
 
 

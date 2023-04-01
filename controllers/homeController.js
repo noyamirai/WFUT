@@ -21,44 +21,9 @@ class HomeController {
 
         const fetchData = await this.API.getMultipleJsonDatas(fetches);
         let teams = fetchData[0];
-        let upcomingGames = await this.setUpcomingEvents(fetchData[1]);
+        let upcomingGames = await this.teamController.setUpcomingEvents(fetchData[1]);
 
         return { 'teams': teams, 'upcomingGames': upcomingGames };
-    }
-
-    setUpcomingEvents = async (eventJsonData = false) => {
-
-        if (!eventJsonData)
-            eventJsonData = await this.API.getJsonData(`eventsnextleague.php?id=${this.leagueId}`);
-
-        if (eventJsonData.failed)
-            return [];
-        
-        let gamesByDate = {};
-        const result = eventJsonData.sort(sortByDate);
-        const populatedTeams = await this.teamController.setTeamData(result);
-        
-        for (const event of populatedTeams) {
-
-            if (Object.keys(gamesByDate).length == 3 && !Object.keys(gamesByDate).includes(event.dateEvent)) {
-                continue;
-            }
-
-            if (Object.keys(gamesByDate).includes(event.dateString)) {
-                gamesByDate[event.dateString].push(event);    
-            } else {
-                gamesByDate[event.dateString] = [];
-                gamesByDate[event.dateString].push(event);
-            }
-
-        };
-
-        for (const key in gamesByDate) {
-            const event = gamesByDate[key];
-            gamesByDate[key] = sortByTime(event);
-        }
-                
-        return gamesByDate;
     }
 
 }

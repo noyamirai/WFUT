@@ -1,0 +1,20 @@
+<ul class="team-form">
+    <% data.forEach(event => { %>
+        
+        <li>
+            <span><%= event.dateStringShort %></span>
+            <div class="team-wrapper">                
+                <img src="<%= event.homeTeamData.strTeamBadge %>" alt="<%= event.strHomeTeam %> logo">
+                <h3><%= event.strHomeTeam %></h3>
+
+            </div>
+    
+            <div class="team-wrapper">                
+                <img src="<%= event.awayTeamData.strTeamBadge %>" alt="<%= event.strAwayTeam %> logo">
+                <h3><%= event.strAwayTeam %></h3>
+
+            </div>
+    
+        </li>
+    <% }) %>
+</ul>

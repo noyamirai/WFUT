@@ -1,35 +1,32 @@
 <main >
     <%- include ('partials/team-header.ejs', { teamData: teamDetails.team_data }) -%>
 
-    <%- include ('./partials/eventcard.ejs', { data: teamDetails.up_next, isList: false }) -%>
+    <div class="fixedItem">
 
-    <nav>
-        <ul class="menu menu--toggle">
-            <li class="active">Team form</li>
-            <li>Upcoming games</li>
-            <li>Squad</li>
-        </ul>
-    </nav>
+        <%- include ('./partials/eventcard.ejs', { data: teamDetails.up_next, isList: false }) -%>
 
-    <%- include ('./partials/widget.ejs', { partial: 'teamform', wdigetClass: '', data: teamDetails.previous_games }) -%>
-<!-- 
-    <hr>
+        <nav>
+            <ul class="menu menu--toggle">
+            
+                <% for(let key in menuItems) { %>
+                    <li class="<%= activeItem == key ? 'active' : '' %>" >
+                        <a href="/team-details/<%= teamDetails.team_data.idTeam %><%= activeItem == key ? '' : (key == 'form' ? '' : `/${key}`) %>"><%= menuItems[key] %></a>
+                    </li>
+                <% } %>
+            </ul>
+        </nav>
 
-    <section class="widget widget--squad">
+    </div>
+    
+    <% if(activeItem == 'form') {%>
+        <%- include ('./partials/widget.ejs', { partial: 'teamform', widgetClass: '', data: teamDetails.previous_games }) -%>
+    <% } else if (activeItem == 'upcoming') { %>
+        <%- include ('./partials/widget.ejs', { partial: 'gamelist', widgetClass: 'game', data: teamDetails.upcoming_games }) -%>
+    <% } else if (activeItem == 'squad') { %>
+        <%- include ('./partials/widget.ejs', { partial: 'squad', widgetClass: 'squad', data: teamDetails.squad }) -%>
+    <% } %>
 
-        <h2>Starting XI</h2>
 
-        <ul>
-            <li>
-                <picture>
-                    <img src="/static/man-united-test-logo.png" alt="">
-                </picture>
-
-                <h3>Name Here</h3>
-                <span>Position</span>
-            </li>
-        </ul>
-
-    </section> -->
+    
 
 </main>

@@ -1,0 +1,19 @@
+<% for(let squadPos in data) { %>
+    <h3><%= squadPos %></h3>
+    <ul>
+        <% data[squadPos].forEach((player, i) => { %>
+            <li>
+                <picture>
+                    <img 
+                    src="<%= player.strCutout ? player.strCutout : player.strThumb %>" 
+                    data-src="<%= player.strCutout ? player.strCutout : player.strThumb %>" 
+                    data-player-image 
+                    alt="<%= player.strPlayer %> cutout photo">
+                </picture>
+        
+                <h3><%= player.strPlayer %></h3>
+                <span><%= squadPos %></span>
+            </li>
+        <% }) %>
+    </ul>
+<% } %>

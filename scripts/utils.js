@@ -1,10 +1,17 @@
 export async function getPageContent(url) {
-  // This is a really scrappy way to do this.
-  // Don't do this in production!
-  const response = await fetch(url);
+  
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      'Accept': 'text/html'
+    }
+  });
   const text = await response.text();
-  // Particularly as it uses regexp
-  return /<body[^>]*>([\w\W]*)<\/body>/.exec(text)[1];
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(text, "text/html");
+
+  return doc.body.innerHTML;
 }
 
 function isBackNavigation(navigateEvent) {

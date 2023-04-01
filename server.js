@@ -65,6 +65,15 @@ app.get('/manifest', (req, res) => {
     res.end();
 });
 
+app.get('/loader', (req, res) => {
+
+    res.render('layout', {
+        'view': 'blanco',
+        'partial': './partials/loader',
+        'bodyClass': 'loading',
+    });
+
+});
 
 app.get('*', (req, res) => {
 

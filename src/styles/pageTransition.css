@@ -3,6 +3,11 @@
   contain: layout;
 }
 
+.fixedItem {
+  view-transition-name: main-content;
+  contain: layout;
+}
+
 @keyframes fade-in {
   from { opacity: 0; }
 }

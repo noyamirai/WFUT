@@ -1,7 +1,7 @@
 <% if (isList) { %>
  <li class="event-card">
 <% } else { %>
-<div class="event-card">
+<div class="event-card<%= typeof fixedItem == 'undefined' ? '' : (fixedItem ? ' fixedItem' : '') %>">
 <% } %>
     <div class="team-wrapper">
         <img src="<%= data.homeTeamData.strTeamBadge %>" alt="<%= data.strHomeTeam %> logo">
@@ -9,8 +9,11 @@
     </div>
 
     <div class="game-info">
-        <span><%= data.localTime %></span>
-        <span><%= data.dateStringShort %></span>
+        <% if (data.strLeague != 'English Womens Super League') { %>
+            <span class="game-info__league"><%= data.strLeague %></span>
+        <% } %>
+        <span class="game-info__time"><%= data.localTime %></span>
+        <span class="game-info__date"><%= !isList ? `This ${data.dateStringShort.toLowerCase()}` : data.dateStringShort %></span>
     </div>
 
     <div class="team-wrapper">

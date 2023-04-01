@@ -13,7 +13,7 @@ class ApiClass {
 
         // todo: error handling
         if (jsonData.failed) {
-            return jsonData;
+            return jsonData.data;
         }
 
         const resultKey = getResultKey(jsonData);
