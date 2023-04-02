@@ -8,50 +8,31 @@ onLinkNavigate(async ({ toPath }) => {
   const cache = await caches.open('other-cache');
   const cachedResponse = await cache.match(toPath);
 
-  if (cachedResponse) {
-      console.log('CONTENT KNOWN IN CACHE');
-
-      const text = await cachedResponse.text();
-      
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(text, "text/html");
-
-      content = doc.body.innerHTML;
-      // Force new content update
-      fetch(toPath, { method: "GET", headers: { 'Accept': 'text/html' }});
-  } else {
-
+  if (!cachedResponse) {
     showLoader();
-
-    if (toPath.includes('team-details') && toPath.includes('squad')) {
-      preloadImages = true;
-    }
-
-    console.log('GET CONTENT');
-    content = await getPageContent(toPath);
   }
+
+  if (toPath.includes('team-details') && toPath.includes('squad')) {
+    preloadImages = true;
+  }
+
+  content = await getPageContent(toPath);
 
   startViewTransition(async () => {
 
     const parser = new DOMParser();
     const doc = parser.parseFromString(content, "text/html");
     const allPlayerImageElements = doc.querySelectorAll('[data-player-image]');
-
+    
     console.log('preload img: ', preloadImages);
 
     if (preloadImages && allPlayerImageElements.length > 0) {
-
-      const modifiedHtmlString = await getModifiedHtmlAfterLoad(doc, allPlayerImageElements, toPath);
+      content = await getModifiedHtmlAfterLoad(doc, allPlayerImageElements, toPath);
       console.log('SET IMAGE CONTENT');
-      hideLoader();
-      document.body.innerHTML = modifiedHtmlString; 
-
-    } else {
-      console.log('SET CONTENT');
-      hideLoader();
-
-      document.body.innerHTML = content; 
-    } 
+    }
+    
+    hideLoader();
+    document.body.innerHTML = content; 
 
   });
 });

@@ -6,6 +6,8 @@ export async function getPageContent(url) {
       'Accept': 'text/html'
     }
   });
+  
+  console.log('SERVICE WORKER DID SHIT?');
   const text = await response.text();
 
   const parser = new DOMParser();

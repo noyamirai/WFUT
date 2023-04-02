@@ -322,8 +322,126 @@ populateTeams = async (dataArray, onlyTeamData = false) => {
 After implementing the session usage the server response time went down from 3 seconds to 300 miliseconds! In the next chapter I will talk about service workers and my implementation of it, but using service workers also improved the server response time of team details even more! It went from 300ms to 3ms!
 
 ### Service worker
-diagram including service worker
 
-explain cache strategy -> stale while revalidate (cache control middleware)
+A service worker runs in the background of a website or web app, separate from the main thread. It intercepts network requests and can modify or cache the responses. Using a service worker not only allows you to create an offline web app, but it also improves the overall performance by caching resources. This helps reducing the need for the browser to make network requests to the server.
 
-show service worker impl.
+There are a few caching strategies, but for WFUT I used the "stale-while-revalidate" strategy. This strategy allows the web app to serve stale content while also fetching updated content from the server in the background. Using this strategy means you are basically always one update behind, but it improves the perceived performance and reduces the amount of time that the user has to wait for content to load. In the activity diagram below you can see how it works:
+
+IMG
+
+In WFUT I'm using the page transition api, this api intercepts internal requests and updates the current body by fetching content from the server. This allows the api to add smooth transitions giving it a "real" app feel. I slightly adjusted the onLinkNavigate function to check if the requested path response is available in the cache. If not, a request is made with said path which then gets intercepted by the service worker. In the service worker, the response of the requests gets served to the client while simultaneously saving it in cache for next time. However, if the requested path response is in fact available in cache, this response gets served to the client. In the background I then make another request (which again gets intercepted by the service worker), ensuring the cached content always stays up-to-date. In the code snippet below you can see the actual implementation:
+
+```js
+onLinkNavigate(async ({ toPath }) => {
+
+  let content;
+  let preloadImages = false;
+
+  const cache = await caches.open('other-cache');
+  const cachedResponse = await cache.match(toPath);
+
+  if (cachedResponse) {
+      console.log('CONTENT KNOWN IN CACHE');
+
+      const text = await cachedResponse.text();
+      
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(text, "text/html");
+
+      content = doc.body.innerHTML;
+      // Force new content update
+      fetch(toPath, { method: "GET", headers: { 'Accept': 'text/html' }});
+  } else {
+
+    showLoader();
+
+    if (toPath.includes('team-details') && toPath.includes('squad')) {
+      preloadImages = true;
+    }
+
+    console.log('GET CONTENT');
+    content = await getPageContent(toPath);
+  }
+
+  startViewTransition(async () => {
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(content, "text/html");
+    const allPlayerImageElements = doc.querySelectorAll('[data-player-image]');
+
+    console.log('preload img: ', preloadImages);
+
+    if (preloadImages && allPlayerImageElements.length > 0) {
+
+      const modifiedHtmlString = await getModifiedHtmlAfterLoad(doc, allPlayerImageElements, toPath);
+      console.log('SET IMAGE CONTENT');
+      hideLoader();
+      document.body.innerHTML = modifiedHtmlString; 
+
+    } else {
+      console.log('SET CONTENT');
+      hideLoader();
+
+      document.body.innerHTML = content; 
+    } 
+
+  });
+});
+```
+
+As you can see in the snippet above, I also implemented (with help of chatGPT) a check to preload images before serving them to the client. This ensures that the images of players are fully loaded when navigating to the squad page. This improved the overal performance and user experience a lot.
+
+VIDEO COMPARE OLD VS NOW
+
+```js
+
+async function getModifiedHtmlAfterLoad(doc, allPlayerImageElements) {
+
+    console.log('PRELOADING');
+
+    // Extract the URLs from the src attributes
+    const srcUrls = Array.from(allPlayerImageElements).map((el) => el.getAttribute("data-src"));
+
+    try {
+        const images = await preloadImages(srcUrls)
+        console.log(`All images preloaded successfully:`, images);
+
+        images.forEach((image, i) => {
+            allPlayerImageElements[i].src = image.url;
+        });
+
+        const modifiedHtmlString = doc.body.innerHTML;
+        return modifiedHtmlString;
+    } catch (error) {
+        allPlayerImageElements.forEach((imageEl, i) => {
+            imageEl.src = srcUrls[i];
+        });
+
+        return doc.body.innerHTML;
+    }
+   
+}
+
+function preloadImages(imageUrls) {
+    const promises = [];
+
+    for (const [index, url] of imageUrls.entries()) {
+        const image = new Image();
+        const promise = new Promise((resolve, reject) => {
+        image.onload = () => {
+            resolve({ url, index });
+        };
+        image.onerror = () => {
+            reject(`Failed to preload image ${url}`);
+        };
+        });
+
+        image.src = url;
+        promises.push(promise);
+
+    }
+
+    return Promise.all(promises);
+}
+```
+
