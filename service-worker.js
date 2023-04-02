@@ -79,7 +79,6 @@ const fetchAndCache = async (request, cacheName) => {
           await cache.put(request, responseClone);
         }
 
-        console.log('omg response in service worker!!');
         return responseFromNetwork;
     }
 
