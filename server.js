@@ -8,6 +8,8 @@ import teamDetailsRouter from './routes/team-details.js';
 import dotenv from 'dotenv';
 import session from 'express-session';
 import cacheManager from './middleware/cacheManager.js';
+import compression from 'compression';
+
 dotenv.config();
 
 import setManifestConfig from './middleware/manifestConfig.js';
@@ -36,6 +38,7 @@ app.use(session({
 }));
 
 app.use(cacheManager.setCache);
+app.use(compression());
 
 app.use(express.static('static'));
 app.use('/static', express.static(__dirname + '/static/'));
@@ -65,14 +68,24 @@ app.get('/manifest', (req, res) => {
     res.end();
 });
 
-app.get('/loader', (req, res) => {
+// define a route that returns multiple image paths
+app.get('/teamlogopaths', (req, res) => {
+    const imagePaths = [
+        '/static/teams/team_logo-140218.png',
+        '/static/teams/team_logo-140219.png',
+        '/static/teams/team_logo-140220.png',
+        '/static/teams/team_logo-140222.png',
+        '/static/teams/team_logo-140224.png',
+        '/static/teams/team_logo-140225.png',
+        '/static/teams/team_logo-140226.png',
+        '/static/teams/team_logo-140227.png',
+        '/static/teams/team_logo-140228.png',
+        '/static/teams/team_logo-140229.png',
+        '/static/teams/team_logo-140532.png',
+        '/static/teams/team_logo-140540.png'
+    ];
 
-    res.render('layout', {
-        'view': 'blanco',
-        'partial': './partials/loader',
-        'bodyClass': 'loading',
-    });
-
+    res.send(imagePaths);
 });
 
 app.get('*', (req, res) => {

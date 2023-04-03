@@ -1,0 +1,74 @@
+[
+    {
+        "strTeam": "Arsenal",
+        "strTeamBadge":  "/static/teams/team_logo-140219.png",
+        "strTeamBadgeWebp":  "/static/teams/team_logo-140219.webp",
+        "idTeam": 140219
+    },
+    {
+        "strTeam": "Aston Villa WFC",
+        "strTeamBadge":  "/static/teams/team_logo-140220.png",
+        "strTeamBadgeWebp":  "/static/teams/team_logo-140220.webp",
+        "idTeam": 140220
+    },
+    {
+        "strTeam": "Brighton WFC",
+        "strTeamBadge":  "/static/teams/team_logo-140222.png",
+        "strTeamBadgeWebp":  "/static/teams/team_logo-140222.webp",
+        "idTeam": 140222
+    },
+    {
+        "strTeam": "Chelsea Women",
+        "strTeamBadge":  "/static/teams/team_logo-140224.png",
+        "strTeamBadgeWebp":  "/static/teams/team_logo-140224.webp",
+        "idTeam": 140224
+    },
+    {
+        "strTeam": "Everton FC Women",
+        "strTeamBadge":  "/static/teams/team_logo-140225.png",
+        "strTeamBadgeWebp":  "/static/teams/team_logo-140225.webp",
+        "idTeam": 140225
+    },
+    {
+        "strTeam": "Leicester City WFC",
+        "strTeamBadge":  "/static/teams/team_logo-140540.png",
+        "strTeamBadgeWebp":  "/static/teams/team_logo-140540.webp",
+        "idTeam": 140540
+    },
+    {
+        "strTeam": "Liverpool FC Women",
+        "strTeamBadge":  "/static/teams/team_logo-140532.png",
+        "strTeamBadgeWebp":  "/static/teams/team_logo-140532.webp",
+        "idTeam": 140532
+    },
+    {
+        "strTeam": "Manchester City WFC",
+        "strTeamBadge":  "/static/teams/team_logo-140218.png",
+        "strTeamBadgeWebp":  "/static/teams/team_logo-140218.webp",
+        "idTeam": 140218
+    },
+    {
+        "strTeam": "Manchester United WFC",
+        "strTeamBadge":  "/static/teams/team_logo-140226.png",
+        "strTeamBadgeWebp":  "/static/teams/team_logo-140226.webp",
+        "idTeam": 140226
+    },
+    {
+        "strTeam": "Reading Women",
+        "strTeamBadge":  "/static/teams/team_logo-140227.png",
+        "strTeamBadgeWebp":  "/static/teams/team_logo-140227.webp",
+        "idTeam": 140227
+    },
+    {
+        "strTeam": "Tottenham Women",
+        "strTeamBadge":  "/static/teams/team_logo-140228.png",
+        "strTeamBadgeWebp":  "/static/teams/team_logo-140228.webp",
+        "idTeam": 140228
+    },
+    {
+        "strTeam": "West Ham Women",
+        "strTeamBadge":  "/static/teams/team_logo-140229.png",
+        "strTeamBadgeWebp":  "/static/teams/team_logo-140229.webp",
+        "idTeam": 140229
+    }
+]

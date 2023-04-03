@@ -3,9 +3,13 @@
 
         <li class="card__item">
             <a href="/team-details/<%= data[i].idTeam %>">
-                <img class="team__logo" src="<%= data[i].strTeamBadge %>" alt="<%= data[i].strTeam %>">
+                <picture class="team__logo">
+                    <source width="35" height="auto" srcset="<%= data[i].strTeamBadgeWebp ?? data[i].strTeamBadge %>" type="image/webp">
+                    <img width="35" height="auto" src="<%= data[i].strTeamBadge %>" alt="<%= data[i].strTeam %>">
+                </picture>
             </a>
         </li>
 
     <% } %>
+
 </ul>

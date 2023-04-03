@@ -4,7 +4,11 @@
 <div class="event-card<%= typeof fixedItem == 'undefined' ? '' : (fixedItem ? ' fixedItem' : '') %>">
 <% } %>
     <div class="team-wrapper">
-        <img src="<%= data.homeTeamData.strTeamBadge %>" alt="<%= data.strHomeTeam %> logo">
+        <picture>
+            <source width="35" height="auto" srcset="<%= data.homeTeamData.strTeamBadgeWebp ?? data.homeTeamData.strTeamBadge %>" type="image/webp">
+            <img width="35" height="auto" src="<%= data.homeTeamData.strTeamBadge %>" alt="<%= data.strHomeTeam %> logo">
+        </picture>
+
         <h3><%= data.strHomeTeam %></h3>
     </div>
 
@@ -13,15 +17,23 @@
             <span class="game-info__league"><%= data.strLeague %></span>
         <% } %>
         <span class="game-info__time"><%= data.localTime %></span>
-        <span class="game-info__date"><%= !isList ? `This ${data.dateStringShort.toLowerCase()}` : data.dateStringShort %></span>
+        <span class="game-info__date"><%= !isList ? `${data.dateStringShort}` : data.dateStringShort %></span>
     </div>
 
     <div class="team-wrapper">
-        <img src="<%= data.awayTeamData.strTeamBadge%>" alt="<%= data.strAwayTeam %> logo">
+        <picture>
+            <source width="35" height="auto" srcset="<%= data.awayTeamData.strTeamBadgeWebp ?? data.awayTeamData.strTeamBadge %>" type="image/webp">
+            <img width="35" height="auto" src="<%= data.awayTeamData.strTeamBadge %>" alt="<%= data.strAwayTeam %> logo">
+        </picture>
+
         <h3><%= data.strAwayTeam %></h3>
     </div>
 
-    <img src="/static/wsl-logo.png" alt="WFUT logo">
+    <picture>
+        <source srcset="/static/wsl-logo.webp" type="image/webp">
+        <img lazyload src="/static/wsl-logo.png" alt="FA Womens' Super League">
+    </picture>
+
     
 <% if (isList) { %>
 </li>

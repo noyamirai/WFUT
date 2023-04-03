@@ -3,7 +3,10 @@
 
     <span class="circle"></span>
     <div class="logo-wrapper">
-        <img class="logo" src="<%= teamData.strTeamBadge %>" alt="<%= teamData.strTeam %>">
+        <picture class="logo">
+            <source srcset="<%= teamData.strTeamBadgeWebp ?? teamData.strTeamBadge %>" type="image/webp">
+            <img src="<%= teamData.strTeamBadge %>" alt="<%= teamData.strTeam %>">
+        </picture>
         <div>
             <h1>Overview</h1>
             <h2><%= teamData.strTeam %></h1>

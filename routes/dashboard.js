@@ -1,16 +1,16 @@
 import express from 'express';
+import fs from 'fs';
+
 const dashRouter = express.Router();
 
 import dotenv from 'dotenv';
 dotenv.config();
 
-import HomeController from '../controllers/homeController.js';
+import TeamController from '../controllers/teamController.js';
+import LeagueController from '../controllers/leagueController.js';
 
 dashRouter.get('/', async (req, res) => {
-    const homeController = new HomeController(process.env.API_KEY, (req.session.league_teams ? req.session.league_teams : undefined));
 
-    let teams = [];
-    let upcomingGames = [];
     let homeData = [];
 
     if (req.session.home_data) {
@@ -20,14 +20,17 @@ dashRouter.get('/', async (req, res) => {
     } else {
         console.log('No home data in session yet! Fetch and save');
 
-        const fetchedHomeData = await homeController.getHomeData();
-        teams = fetchedHomeData.teams;
-        upcomingGames = fetchedHomeData.upcomingGames;
+        const leagueController = new LeagueController(process.env.API_KEY);
+        const leagueTeams = await leagueController.getLeagueTeamsFromApi();
+        req.session.league_teams = leagueTeams;
+
+        const teamController = new TeamController(process.env.API_KEY, (req.session.league_teams ? req.session.league_teams : undefined));
+        const upcomingGames = await teamController.setUpcomingEvents();
 
         homeData.push({
             partial: 'teamlist',
             className: 'teamlist',
-            data: teams
+            data: leagueTeams
         });
 
         homeData.push({
@@ -36,7 +39,6 @@ dashRouter.get('/', async (req, res) => {
             data: upcomingGames
         });
 
-        req.session.league_teams = teams;
         req.session.home_data = homeData;
     }
 
@@ -45,14 +47,5 @@ dashRouter.get('/', async (req, res) => {
         'allData': homeData
     });
 });
-
-// waiting for server response time
-// api itself -> 200ms
-// nothing -> 200ms
-// with req.session -> 30ms
-// without service worker or with service worker on intial load -> 70-200ms
-// with service worker -> 2ms 
-
-// req.session usage more bc i dont want to perform multiple calls 
 
 export default dashRouter;

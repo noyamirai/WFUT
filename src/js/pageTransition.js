@@ -1,6 +1,7 @@
 import { getPageContent, onLinkNavigate } from '/scripts/utils.js';
 
 onLinkNavigate(async ({ toPath }) => {
+  console.log('ONLINKNAV');
 
   let content;
   let preloadImages = false;
@@ -12,7 +13,9 @@ onLinkNavigate(async ({ toPath }) => {
     showLoader();
   }
 
-  if (toPath.includes('team-details') && toPath.includes('squad')) {
+  console.log(cachedResponse);
+
+  if (!cachedResponse && toPath.includes('team-details') && toPath.includes('squad')) {
     preloadImages = true;
   }
 
@@ -20,16 +23,16 @@ onLinkNavigate(async ({ toPath }) => {
 
   startViewTransition(async () => {
 
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(content, "text/html");
-    const allPlayerImageElements = doc.querySelectorAll('[data-player-image]');
+    // const parser = new DOMParser();
+    // const doc = parser.parseFromString(content, "text/html");
+    // const allPlayerImageElements = doc.querySelectorAll('[data-player-image]');
     
-    console.log('preload img: ', preloadImages);
+    // console.log('preload img: ', preloadImages);
 
-    if (preloadImages && allPlayerImageElements.length > 0) {
-      content = await getModifiedHtmlAfterLoad(doc, allPlayerImageElements, toPath);
-      console.log('SET IMAGE CONTENT');
-    }
+    // if (preloadImages && allPlayerImageElements.length > 0) {
+    //   content = await getModifiedHtmlAfterLoad(doc, allPlayerImageElements, toPath);
+    //   console.log('SET IMAGE CONTENT');
+    // }
     
     hideLoader();
     document.body.innerHTML = content; 

@@ -320,6 +320,14 @@ header::after {
       height: 40%;
     }
 
+      header .logo-wrapper .logo > * {
+        width: 100%;
+        height: 100%;
+
+        object-fit: contain;
+        object-position: cover;
+      }
+
     header .logo-wrapper h1, header .logo-wrapper h2 {
       font-size: 18px; font-size: 1.8rem;
       background-color: #10ffc4;
@@ -408,13 +416,24 @@ header::after {
   background-color: #0FFFC5;
 }
 
-.event-card > img {
+.event-card > picture {
   position: absolute;
   /* transform: scale(2.5); */
   filter: brightness(6);
   opacity: 6%;
   width: 70%;
 }
+
+  .event-card > picture img,
+  .event-card > picture source {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+    
+    object-fit: contain;
+    object-position: center;
+  }
 
 .event-card div {
   position: relative;
@@ -436,11 +455,19 @@ header::after {
     font-weight: 700;
   }
 
-  .team-wrapper img {
+  .team-wrapper picture {
+    display: inline-block;
     width: 32px;
     height: 32px;
     min-width: 32px;
   }
+
+    .team-wrapper picture > * {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+    }
 
 .game-info {
   display: flex;
