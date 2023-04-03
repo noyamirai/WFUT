@@ -372,7 +372,7 @@ onLinkNavigate(async ({ toPath }) => {
 
 As you can see in the snippet above, I also implemented (with help of chatGPT) a check to preload images before serving them to the client. This ensures that the images of players are fully loaded when navigating to the squad page. This improved the overal performance and user experience a lot.
 
-https://drive.google.com/file/d/1YEipBEdEUmHkuTLvdJyawfTvZw6jQetf/view?usp=share_link
+[Video comparison of OLD vs NEW performance](https://drive.google.com/file/d/1YEipBEdEUmHkuTLvdJyawfTvZw6jQetf/view?usp=share_link)
 
 ```js
 
