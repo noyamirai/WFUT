@@ -313,7 +313,7 @@ populateTeams = async (dataArray, onlyTeamData = false) => {
 }
 
 // original function (looping, waiting for all promises, foreach to check in session or if all false) -> 6s
-// without session usage -> 3s
+// refactored function, without session usage -> 3s
 // with session usage -> 300ms
 // with service worker -> 3ms
 
@@ -327,9 +327,9 @@ A service worker runs in the background of a website or web app, separate from t
 
 There are a few caching strategies, but for WFUT I used the "stale-while-revalidate" strategy. This strategy allows the web app to serve stale content while also fetching updated content from the server in the background. Using this strategy means you are basically always one update behind, but it improves the perceived performance and reduces the amount of time that the user has to wait for content to load. In the activity diagram below you can see how it works:
 
-IMG
+![WFUT Activity diagram](./assets/WFUT-activity_diagram.jpg)
 
-In WFUT I'm using the page transition api, this api intercepts internal requests and updates the current body by fetching content from the server. This allows the api to add smooth transitions giving it a "real" app feel. I slightly adjusted the onLinkNavigate function to check if the requested path response is available in the cache. If not, a request is made with said path which then gets intercepted by the service worker. In the service worker, the response of the requests gets served to the client while simultaneously saving it in cache for next time. However, if the requested path response is in fact available in cache, this response gets served to the client. In the background I then make another request (which again gets intercepted by the service worker), ensuring the cached content always stays up-to-date. In the code snippet below you can see the actual implementation:
+In WFUT I'm using the page transition api, this api intercepts internal requests and updates the current body by fetching content from the server. This allows the api to add smooth transitions giving it a "real" app feel. I slightly adjusted the onLinkNavigate function to check if the requested path response is available in the cache. If not, a loader will be shown on screen before transitioning to said page. Regardless of it existing in cache, I make a request to fetch the content, which gets intercepted by the service worker, ensuring the cached content always stays up-to-date. In the code snippet below you can see the actual implementation:
 
 ```js
 onLinkNavigate(async ({ toPath }) => {
@@ -340,50 +340,31 @@ onLinkNavigate(async ({ toPath }) => {
   const cache = await caches.open('other-cache');
   const cachedResponse = await cache.match(toPath);
 
-  if (cachedResponse) {
-      console.log('CONTENT KNOWN IN CACHE');
-
-      const text = await cachedResponse.text();
-      
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(text, "text/html");
-
-      content = doc.body.innerHTML;
-      // Force new content update
-      fetch(toPath, { method: "GET", headers: { 'Accept': 'text/html' }});
-  } else {
-
+  if (!cachedResponse) {
     showLoader();
-
-    if (toPath.includes('team-details') && toPath.includes('squad')) {
-      preloadImages = true;
-    }
-
-    console.log('GET CONTENT');
-    content = await getPageContent(toPath);
   }
+
+  if (toPath.includes('team-details') && toPath.includes('squad')) {
+    preloadImages = true;
+  }
+
+  content = await getPageContent(toPath);
 
   startViewTransition(async () => {
 
     const parser = new DOMParser();
     const doc = parser.parseFromString(content, "text/html");
     const allPlayerImageElements = doc.querySelectorAll('[data-player-image]');
-
+    
     console.log('preload img: ', preloadImages);
 
     if (preloadImages && allPlayerImageElements.length > 0) {
-
-      const modifiedHtmlString = await getModifiedHtmlAfterLoad(doc, allPlayerImageElements, toPath);
+      content = await getModifiedHtmlAfterLoad(doc, allPlayerImageElements, toPath);
       console.log('SET IMAGE CONTENT');
-      hideLoader();
-      document.body.innerHTML = modifiedHtmlString; 
-
-    } else {
-      console.log('SET CONTENT');
-      hideLoader();
-
-      document.body.innerHTML = content; 
-    } 
+    }
+    
+    hideLoader();
+    document.body.innerHTML = content; 
 
   });
 });
