@@ -372,7 +372,10 @@ onLinkNavigate(async ({ toPath }) => {
 
 As you can see in the snippet above, I also implemented (with help of chatGPT) a check to preload images before serving them to the client. This ensures that the images of players are fully loaded when navigating to the squad page. This improved the overal performance and user experience a lot.
 
-VIDEO COMPARE OLD VS NOW
+https://github.com/noyamirai/WFUT/assets/WFUT-image_loading-video.mov
+<!-- <video width="100%" height="auto" controls>
+  <source src="./assets/WFUT-image_loading-video.mov" type="video/mp4">
+</video> -->
 
 ```js
 
