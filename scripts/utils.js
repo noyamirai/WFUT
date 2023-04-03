@@ -6,6 +6,8 @@ export async function getPageContent(url) {
       'Accept': 'text/html'
     }
   });
+
+  console.log('FETCHED');
   
   const text = await response.text();
 

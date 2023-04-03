@@ -1,41 +1,61 @@
 import { getPageContent, onLinkNavigate } from '/scripts/utils.js';
 
-onLinkNavigate(async ({ toPath }) => {
-  console.log('ONLINKNAV');
-
+onLinkNavigate(async ({ toPath, fromPath }) => {
   let content;
-  let preloadImages = false;
+  let handleLazyLoad = false;
+  let loaderShown = false;
 
   const cache = await caches.open('other-cache');
   const cachedResponse = await cache.match(toPath);
+  let loaderType = 'main';
 
   if (!cachedResponse) {
-    showLoader();
+
+    if (toPath.includes('team-details') && fromPath.includes('team-details')) {
+      loaderType = 'widget';
+    }
+
+    loaderShown = true;
+    showLoader(loaderType);
   }
 
-  console.log(cachedResponse);
-
   if (!cachedResponse && toPath.includes('team-details') && toPath.includes('squad')) {
-    preloadImages = true;
+    handleLazyLoad = true;
   }
 
   content = await getPageContent(toPath);
 
+  if (loaderShown) {
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(content, "text/html");
+
+    if (loaderType == 'widget') {
+      const loaderEl = doc.querySelector('.loader--widget');
+      const parentEl = loaderEl.closest('.widget');
+      const widgetContent = parentEl.querySelector('[data-widget-content]');
+
+      widgetContent.classList.add('hide');
+
+    } else {
+      const bodyEl = doc.querySelector('body');
+      bodyEl.classList.add('loading');
+    }
+
+    content = doc.body.innerHTML;
+  }
+
   startViewTransition(async () => {
 
-    // const parser = new DOMParser();
-    // const doc = parser.parseFromString(content, "text/html");
-    // const allPlayerImageElements = doc.querySelectorAll('[data-player-image]');
-    
-    // console.log('preload img: ', preloadImages);
-
-    // if (preloadImages && allPlayerImageElements.length > 0) {
-    //   content = await getModifiedHtmlAfterLoad(doc, allPlayerImageElements, toPath);
-    //   console.log('SET IMAGE CONTENT');
-    // }
-    
-    hideLoader();
     document.body.innerHTML = content; 
+
+    if (handleLazyLoad) {
+      lazyLoadHandler();
+    }
+
+    if (loaderShown) {
+      hideLoader(loaderType);
+    }
 
   });
 });
@@ -52,30 +72,40 @@ function startViewTransition(callback) {
   document.startViewTransition(callback);
 }
 
-function showLoader() {
-  // Create and show the loader element
-  const loaderElement = document.createElement('div');
-  loaderElement.innerText = 'Loading...';
-  loaderElement.style.position = 'fixed';
-  loaderElement.style.top = 0;
-  loaderElement.style.left = 0;
-  loaderElement.style.width = '100%';
-  loaderElement.style.height = '100%';
-  loaderElement.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-  loaderElement.style.color = '#fff';
-  loaderElement.style.display = 'flex';
-  loaderElement.style.justifyContent = 'center';
-  loaderElement.style.alignItems = 'center';
-  loaderElement.style.zIndex = '1000';
-  loaderElement.className = "loader";
+function showLoader(type = 'main') {
+  const loaderElement = document.querySelector(`.loader--${ type }`);
 
-  document.body.appendChild(loaderElement);
+  if (type == 'widget') {
+    const parentEl = loaderElement.closest('.widget');
+    const widgetContent = parentEl.querySelector('[data-widget-content]');
+  
+    widgetContent.classList.add('hide');
+  } else {
+      const bodyEl = document.querySelector('body');
+      bodyEl.classList.add('loading');
+  }
+
+  if (loaderElement && loaderElement.className.includes('hide')) {
+    loaderElement.classList.remove('hide');
+  }
+
 }
 
-function hideLoader() {
+function hideLoader(type = 'main') {
   // Remove the loader element
-  const loaderElement = document.querySelector('.loader');
-  if (loaderElement) {
-    loaderElement.remove();
+  const loaderElement = document.querySelector(`.loader--${ type }`);
+
+  if (type == 'widget') {
+    const parentEl = loaderElement.closest('.widget');
+    const widgetContent = parentEl.querySelector('[data-widget-content]');
+  
+    widgetContent.classList.remove('hide');
+  } else {
+    const bodyEl = document.querySelector('body');
+    bodyEl.classList.remove('loading');
+  }
+
+  if (loaderElement && !loaderElement.className.includes('hide')) {
+    loaderElement.classList.add('hide');
   }
 }

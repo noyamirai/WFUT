@@ -7,8 +7,11 @@
     <body class="<%= fs.existsSync("views/"+view+".ejs") ? (typeof bodyClass == 'undefined' ? '' : bodyClass) : 'error' %>">
         
         <% if ( fs.existsSync("views/"+view+".ejs") ) { %>
+            <%- include (`./partials/loader.ejs`, { className: 'loader--main' }) -%>
+
             <%- include (view) -%>
         <% } else { %>
+
             <%- include ('blanco', { 'partial': './partials/message', 'messageTitle': 'Oops!', 'messageSubTitle': 'Template does not exists...'}) -%>
         <% } %>
 

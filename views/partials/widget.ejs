@@ -1,3 +1,6 @@
 <section class="widget widget--<%= (typeof widgetClass == 'undefined' ? partial : widgetClass) %>" data-widget-<%= partial ?? (typeof widgetClass == 'undefined' ? '' : widgetClass) %>>
-    <%- include (`${partial}.ejs`, {data: data }) -%>
+    <%- include (`loader.ejs`, { className: 'loader--widget' }) -%>
+    <div data-widget-content>
+        <%- include (`${partial}.ejs`, {data: data }) -%>
+    </div>
 </section>

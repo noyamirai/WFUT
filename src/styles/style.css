@@ -64,6 +64,10 @@ body {
     background-color: var(--background-color);
 }
 
+body.loading {
+  overflow: hidden;
+}
+
 body.error {
   display: flex;
   align-items: center;
@@ -608,16 +612,39 @@ header::after {
   #LOADER
 ============================================================================= */
 .loader {
+  position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
 
-  height: 65px;
   border-radius: 6px;
 
   font-size: 18px;
   font-size: 1.8rem;
+
+  inset: 0;
+  z-index: 300;
+
+  background-color: var(--background-color);
 }
+
+.loader--main {
+  align-items: flex-start;
+  padding-top: 24px;
+  top: 216px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+  .loader--main .icon {
+
+  }
+
+.widget > .loader {
+  height: 65px;
+}
+
 
 .loader .icon {
   opacity: 25%;
@@ -805,12 +832,48 @@ button {
 }
 
   .widget--squad picture {
-    display: block;
+    display: inline-block;
     
+    position: relative;
+    overflow: hidden;
     width: 80px;
     height: 80px;
 
-    background-color: #33B1E7;
+    background-color: hsl(228 13% 21% / 1);
+    border-radius: 50%;
+  }
+
+  .widget--squad picture::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    /* background-image: linear-gradient(
+      90deg,
+      rgba(255,255,255, 0),
+      rgba(255,255,255, 0.2 20%),
+      rgba(255,255,255, 0.5 60%),
+      rgba(255,255,255, 0)
+    ); */
+
+    background-image: linear-gradient(
+      90deg,
+    hsl(233deg 13% 33% / 0%) 0,
+    hsl(233deg 13% 33% / 20%) 20%,
+    hsl(233deg 13% 33% / 50%) 60%,
+    hsl(233deg 13% 33% / 0%));
+    animation: shimmer 2s infinite;
+    content: '';
+
+    z-index: 300;
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
   }
 
     .widget--squad img {
@@ -819,4 +882,11 @@ button {
 
       object-fit: cover;
       object-position: center bottom;
+
+      position: relative;
+      z-index: 500;
+    }
+
+    .widget--squad picture.loaded::after {
+      display: none;
     }
