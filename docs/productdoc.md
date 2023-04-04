@@ -27,7 +27,7 @@ Some apps use both techniques. This is also known as "isomorphic rendering". Usi
 
 ## Performance optimization
 
-To provide users the best user experience and app performance I needed to improve the initial load of the app, and throughout the app itself. In my CSR SPA I mainly used localstorage to gain access to data, since I felt it was unneccessary to perform calls every X time. With a SSR PWA I am now able to implement sessions within the server. If the user's JS fails to work or load for whatever reason, their session will remain, whereas with my CSR app it would most likely break.
+To provide users the best user experience and app performance I needed to improve the initial load of the app, and just the general performance throughout the app itself. In my CSR SPA I mainly used localstorage to gain access to data. Since I felt it was unneccessary to perform calls every X time, I also used it as a session manager. With a SSR PWA I am now able to implement sessions within the server. If the user's JS fails to work or load for whatever reason, their session will remain, whereas with my CSR app it would most likely break.
 
 Throughout the development process I stumbled upon several 'performance issues'. The first one occured during implementation of the very first api calls I had to make to populate the home page. The server response time of the API itself was about 200ms. As I did not want to perform countless API calls on each request (reloading pages etc), I implemented Express session to store the league teams. These teams, including their logos and ids, will rarely change, so it would not be necessary to fetch these details on every request. So, storing them in the server's session meant one request less! 
 
@@ -62,7 +62,7 @@ if (req.session.home_data) {
 }
 ```
 
-After using Express session the response time decreased from 200ms to 30ms! This improvement is great, however it still means the initial load server response time is still 70-200ms, so it is only relevant for repeat visits. The next step was using a service worker, which I will discuss in the next chapter, but using a service worker improved the performance on repeat visits significantly! It went from 70-200ms to 2ms. COOL!
+After using Express session the response time decreased from 200ms to 30ms! This improvement is great, however it still means the initial load server response time is still 70-200ms, so it is only relevant for repeat visits. The next step was using a service worker, which I will discuss in the next chapter, but using a service worker improved the performance on repeat visits significantly! It went from 70-200ms to 2ms. COOL! (Later, after fetching some extra data, the response time went up to 500ms-800ms)
 
 The second one occured when navigating to a team details page. Due to the fact that I need to perform at least 3 calls and manipulate all data on initial load, you can imagine it was a shit show. It was unmanagable, chaotic, too many lines and most importantly, it was super slow... The server response time of fetching team details took 6 seconds! So, first thing I did was refactor the code into something more compact. The refactoration caused the server response time to decrease from 6 seconds to 3 seconds! A clear improvement, but still too slow.
 
@@ -113,17 +113,58 @@ populateTeams = async (dataArray, onlyTeamData = false) => {
 
     }
 
-    ...
+    ... more stuff
 }
 ```
 
-After implementing the session usage the server response time went down from 3 seconds to 300 miliseconds! In the next chapter I will talk about service workers and my implementation of it, but using service workers also improved the server response time of team details even more! It went from 300ms to 3ms!
+After implementing the session usage the server response time went down from 3 seconds to 300 miliseconds! In the next chapter I will talk about service workers and my implementation of it, but using service workers also improved the server response time of team details even more! It went from 300ms to 3ms! Note that these improvements were in regards of repeat visit... The initial load remained around 500-800ms. 
 
 ![Performance comparison](./assets/WFUT-performance_comparison.png)
 
-The second issue was the intial load of both the home and team details page. The server respond time would range between 500ms-800ms, which was a bit too high for my liking. At first I thought this would be solvable through Express session usage, but it was not. It had to do with the way I was setting/populating team data objects. In the snippet above for example, you can see me checking the session twice for home and away teams. If one of the ids was not in session I had to perform an api call. As mentioned before, I don't feel like its necessary to call an API X times especially when the data rarely ever changes (league teams for example). My solution: create my own json file containing the teams! The json from the API returns a lot of data when fetching a specific team; data I don't really need! I only need an id, name and team logo. Since the info is already known via API response, I just copied the ids and saved their respective logos into my own server (hey, its a public api and I paid for it!).
+So, even though I improved a lot, the intial load of both the home and team details page stayed the same. The server response time would range between 500ms-800ms, which was a bit too high for my liking. At first I thought this would be solvable through Express session usage, but it was not. It had to do with the way I was setting/populating team data objects. In the snippet from earlier for example, you can see how I check the session twice for home and away teams. If one of the ids was not in session I had to perform an api call. As mentioned before, I don't feel like its necessary to call an API X times especially when the data rarely ever changes (league teams for example). My solution: create my own json file containing the teams! The json from the API returns a lot of data when fetching a specific team; data I don't really need! I only need an id, name and team logo. Since the info is already known via API response, I just copied the ids and saved their respective logos into my own server (hey, its a public api and I paid for it!). This also allowed me to create .webp files out of the .png files.
 
-Creating my own little json file with all of the FA Womens Super League teams meant I will always have teams in my session, so all I really had to do was pass this along to my controller and perform some checks there. I also came to the realization that I was dubble checking teams on the team details page. Since I was using the same function to fetch team data, it would try to fetch home and away teams, what I forgot to think of was that one a team details page, the selected team is either the home or away team! So, we only really have to fetch data for the other team. Anyway, all of this resulted in compacter code and a boost in performance on initial load for both pages! (Note: the initial load for team details was around 700ms before the refactoration) See image below:
+Creating my own little json file with all of the FA Womens Super League teams means I will always have teams in my session, so all I really had to do was pass this along to my controller and perform some checks there. I also came to the realization that I was dubble checking teams on the team details page. Since I was using the same function to fetch team data, it would try to fetch data for both home and away teams. However what I forgot to take into account was that once you are on a team details page, the selected team is either the home or away team! So, we only really have to fetch data for the others team (50% less!). Anyway, all of this resulted in compacter code and a boost in performance on initial load for both pages! 
+
+```js
+getHomeAndAwayTeamData = async (idHomeTeam, idAwayTeam) => {            
+  const ids = [ idHomeTeam, idAwayTeam ];
+
+  const eventTeams = ids.map(async (idTeam) => {
+      const team = await this.getTeamData(this.sessionLeagues, idTeam);
+
+      if (team.strTeam.toLowerCase() == 'unknown') {
+          team.strTeamBadgeWebp = null;   
+      }
+
+      return team;
+  });
+
+  const [homeTeam, awayTeam] = await Promise.all(eventTeams);
+  return [ homeTeam, awayTeam ];
+}
+
+populateTeams = async (dataArray) => {
+
+  const teams = await this.getHomeAndAwayTeamData(dataArray.idHomeTeam, dataArray.idAwayTeam);        
+  const homeTeamData = teams[0];
+  const awayTeamData = teams[1];
+
+  dataArray.homeTeamData = homeTeamData;
+  dataArray.awayTeamData = awayTeamData;
+
+  const formattedDateShort = getFormattedDate(dataArray.dateEvent, true);
+  dataArray.dateStringShort = formattedDateShort;
+  
+  const formattedDate = getFormattedDate(dataArray.dateEvent);
+  dataArray.dateString = formattedDate;
+  
+  dataArray.localTime = getLocalTime(dataArray.strTimestamp);
+
+  return dataArray;
+}
+```
+
+As you can see in the snippet above, the function is a lot more compact and readable now (it also just makes more sense)! Below a comparison of the difference in performance (note: the initial load for team details was around 800ms before the refactoration)
 
 ![Performance comparison](./assets/WFUT-performance_comparison-2.png)
 
