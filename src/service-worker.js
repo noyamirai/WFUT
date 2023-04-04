@@ -87,26 +87,6 @@ const fetchAndCache = async (request, cacheName) => {
         return responseFromNetwork;
     }
 
-    // if (!!cachedResponse) {
-    //   console.log('cached response! ', request.url);
-    //   return cachedResponse;
-    // }
-
-    // const responseFromNetwork = await fetch(request);
-
-    // // don't cache non-ok responses
-    // if (responseFromNetwork.ok && (isCoreReq || isHtmlReq)) {
-    //   console.log('saving new response: ', request.url);
-    //   const responseClone = responseFromNetwork.clone();
-    //   caches.open(cacheNameToCheck)
-    //     .then((cache) => {
-    //       cache.put(request, responseClone);
-    //     });
-    // }
-
-    // console.log('retrun response from network: ', request.url );
-    // return responseFromNetwork;
-
   } catch (error) {
 
     const checkResponse = await caches.match(request);

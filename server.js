@@ -42,8 +42,7 @@ app.use(compression());
 
 app.use(express.static('static'));
 app.use('/static', express.static(__dirname + '/static/'));
-app.use('/src', express.static(__dirname + '/src/'));
-app.use('/', express.static(__dirname + '/'));
+// app.use('/', express.static(__dirname + '/'));
 
 // ROUTES
 app.use('/', dashRouter);

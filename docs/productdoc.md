@@ -158,7 +158,6 @@ In WFUT I'm using the page transition api, this api intercepts internal requests
 ```js
 onLinkNavigate(async ({ toPath, fromPath }) => {
   let content;
-  let handleLazyLoad = false;
   let loaderShown = false;
 
   const cache = await caches.open('other-cache');
@@ -175,39 +174,24 @@ onLinkNavigate(async ({ toPath, fromPath }) => {
     showLoader(loaderType);
   }
 
-  if (!cachedResponse && toPath.includes('team-details') && toPath.includes('squad')) {
-    handleLazyLoad = true;
-  }
-
+  console.log('initiating fetch');
   content = await getPageContent(toPath);
 
+  console.log('cached content: ', cachedResponse);
+
   if (loaderShown) {
-
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(content, "text/html");
-
-    if (loaderType == 'widget') {
-      const loaderEl = doc.querySelector('.loader--widget');
-      const parentEl = loaderEl.closest('.widget');
-      const widgetContent = parentEl.querySelector('[data-widget-content]');
-
-      widgetContent.classList.add('hide');
-
-    } else {
-      const bodyEl = doc.querySelector('body');
-      bodyEl.classList.add('loading');
-    }
-
-    content = doc.body.innerHTML;
+    ...
   }
 
   startViewTransition(async () => {
 
     document.body.innerHTML = content; 
 
-    if (handleLazyLoad) { lazyLoadHandler(); }
+    if (loaderShown) {
+      hideLoader(loaderType);
+    }
 
-    if (loaderShown) { hideLoader(loaderType); }
+    lazyLoadHandler(cachedResponse);
 
   });
 });

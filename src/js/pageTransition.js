@@ -1,4 +1,4 @@
-import { getPageContent, onLinkNavigate } from '/scripts/utils.js';
+import { getPageContent, onLinkNavigate } from './utils.js';
 
 onLinkNavigate(async ({ toPath, fromPath }) => {
   let content;
@@ -21,24 +21,7 @@ onLinkNavigate(async ({ toPath, fromPath }) => {
   console.log('initiating fetch');
   content = await getPageContent(toPath);
 
-  // console.log('content: ', content);
   console.log('cached content: ', cachedResponse);
-  console.log('loader shown: ', loaderShown);
-
-  // if (cachedResponse) {
-  //   const parser = new DOMParser();
-  //   const doc = parser.parseFromString(content, "text/html");
-
-  //   const lazyImages = doc.querySelectorAll('img[loading="lazy"]');
-
-  //   lazyImages.forEach((img) => {
-  //       setStyling(img);
-  //   });
-
-  //   content = doc.body.innerHTML;
-  // }
-
-  console.log(content);
 
   if (loaderShown) {
 
