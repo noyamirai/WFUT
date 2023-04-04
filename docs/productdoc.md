@@ -121,6 +121,12 @@ After implementing the session usage the server response time went down from 3 s
 
 ![Performance comparison](./assets/WFUT-performance_comparison.png)
 
+The second issue was the intial load of both the home and team details page. The server respond time would range between 500ms-800ms, which was a bit too high for my liking. At first I thought this would be solvable through Express session usage, but it was not. It had to do with the way I was setting/populating team data objects. In the snippet above for example, you can see me checking the session twice for home and away teams. If one of the ids was not in session I had to perform an api call. As mentioned before, I don't feel like its necessary to call an API X times especially when the data rarely ever changes (league teams for example). My solution: create my own json file containing the teams! The json from the API returns a lot of data when fetching a specific team; data I don't really need! I only need an id, name and team logo. Since the info is already known via API response, I just copied the ids and saved their respective logos into my own server (hey, its a public api and I paid for it!).
+
+Creating my own little json file with all of the FA Womens Super League teams meant I will always have teams in my session, so all I really had to do was pass this along to my controller and perform some checks there. I also came to the realization that I was dubble checking teams on the team details page. Since I was using the same function to fetch team data, it would try to fetch home and away teams, what I forgot to think of was that one a team details page, the selected team is either the home or away team! So, we only really have to fetch data for the other team. Anyway, all of this resulted in compacter code and a boost in performance on initial load for both pages! (Note: the initial load for team details was around 700ms before the refactoration) See image below:
+
+![Performance comparison](./assets/WFUT-performance_comparison-2.png)
+
 A few other things I did to improve the performance was create my own json file including all league teams and paths to their respective logos (png and webp). Instead of reading the logos from the api, I now get them from the server and create more control (provide webp option). I also compress and minfiy my css and js using `gulp` in my build scripts.
 
 ```json
@@ -174,10 +180,7 @@ onLinkNavigate(async ({ toPath, fromPath }) => {
     showLoader(loaderType);
   }
 
-  console.log('initiating fetch');
   content = await getPageContent(toPath);
-
-  console.log('cached content: ', cachedResponse);
 
   if (loaderShown) {
     ...
@@ -199,6 +202,6 @@ onLinkNavigate(async ({ toPath, fromPath }) => {
 
 As you can see in the snippet above, I also implemented (with help of chatGPT) a check to see when player images are fully loaded, since I added the `loading="true"` attribute to the images. Before they are loaded in, in CSS I create a skeleton animation effect to let the user know the images are on their way! This ensures that the images of players are fully loaded when navigating to the squad page. This improved the overal performance and user experience a lot. See video comparison below.
 
-<div style="position:relative;width:fit-content;height:fit-content;">
-    <iframe allow="autoplay;" allowfullscreen style="border:none" src="https://clipchamp.com/watch/jroS8LJr2Ol/embed" width="640" height="360"></iframe>
-</div>
+<a href="https://clipchamp.com/watch/jroS8LJr2Ol" target="_blank">
+<img src="./assets/WFUT-video_thumbnail.png" alt="Click here to watch video comparison">
+</a>

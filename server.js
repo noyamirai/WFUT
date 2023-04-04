@@ -81,7 +81,19 @@ app.get('/teamlogopaths', (req, res) => {
         '/static/teams/team_logo-140228.png',
         '/static/teams/team_logo-140229.png',
         '/static/teams/team_logo-140532.png',
-        '/static/teams/team_logo-140540.png'
+        '/static/teams/team_logo-140540.png',
+        '/static/teams/team_logo-140218.webp',
+        '/static/teams/team_logo-140219.webp',
+        '/static/teams/team_logo-140220.webp',
+        '/static/teams/team_logo-140222.webp',
+        '/static/teams/team_logo-140224.webp',
+        '/static/teams/team_logo-140225.webp',
+        '/static/teams/team_logo-140226.webp',
+        '/static/teams/team_logo-140227.webp',
+        '/static/teams/team_logo-140228.webp',
+        '/static/teams/team_logo-140229.webp',
+        '/static/teams/team_logo-140532.webp',
+        '/static/teams/team_logo-140540.webp'
     ];
 
     res.send(imagePaths);

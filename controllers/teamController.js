@@ -72,7 +72,7 @@ class TeamClass {
         const eventTeams = ids.map(async (idTeam) => {
             const team = await this.getTeamData(this.sessionLeagues, idTeam);
 
-            if (team.strTeam.toLowerCase() != 'unknown') {
+            if (team.strTeam.toLowerCase() == 'unknown') {
                 team.strTeamBadgeWebp = null;   
             }
 
