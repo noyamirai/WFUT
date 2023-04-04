@@ -6,7 +6,11 @@
             <div class="team-wrapper">
                 <span class="<%= event.intHomeScore > event.intAwayScore ? 'win' : 'loss' %>"><%= event.intHomeScore %></span>
                 
-                <img src="<%= event.homeTeamData.strTeamBadge %>" alt="<%= event.strHomeTeam %> logo">
+                <picture>
+                    <source width="35" height="auto" srcset="<%= event.homeTeamData.strTeamBadgeWebp ?? event.homeTeamData.strTeamBadge %>" type="image/webp">
+                    <img width="28" height="28" src="<%= event.homeTeamData.strTeamBadge %>" alt="<%= event.strHomeTeam %> logo">
+                </picture>
+
                 <h3><%= event.strHomeTeam %></h3>
 
             </div>
@@ -14,7 +18,11 @@
             <div class="team-wrapper">
                 <span class="<%= event.intAwayScore > event.intHomeScore ? 'win' : 'loss' %>"><%= event.intAwayScore %></span>
                 
-                <img src="<%= event.awayTeamData.strTeamBadge %>" alt="<%= event.strAwayTeam %> logo">
+                <picture>
+                    <source width="35" height="auto" srcset="<%= event.awayTeamData.strTeamBadgeWebp ?? event.homeTeamData.strTeamBadge %>" type="image/webp">
+                    <img width="28" height="28" src="<%= event.awayTeamData.strTeamBadge %>" alt="<%= event.strHomeTeam %> logo">
+                </picture>
+
                 <h3><%= event.strAwayTeam %></h3>
 
             </div>

@@ -8,18 +8,36 @@ class LeagueController {
         this.API = new apiClass(this.apiKey);
     }
 
-    getLeagueTeamsFromFile = () => {
+    listLeagueTeamsFromFile = () => {
         let leagueTeamsFile = fs.readFileSync('./src/league_teams.json', 'utf8');
         const jsonData = JSON.parse(leagueTeamsFile);
 
         return jsonData;
     }
 
-    getLeagueTeamsFromApi = async () => {
+    listLeagueTeamsFromApi = async () => {
         const jsonData = await this.API.getJsonData(`search_all_teams.php?l=English_Womens_Super_League`);
         return jsonData;
     }
 
+    getLeagueTeamFromFile = (idTeam) => {
+
+        if (!idTeam) {
+            return [];
+        }
+
+        let leagueTeamsFile = fs.readFileSync('./src/league_teams.json', 'utf8');
+        const jsonData = JSON.parse(leagueTeamsFile);
+
+        let foundObject = jsonData.find(obj => obj.idTeam == idTeam);
+        
+        if (!foundObject) {
+            return [];
+        }
+
+        return foundObject;
+
+    }
 }
 
 export default LeagueController;

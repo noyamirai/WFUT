@@ -19,23 +19,28 @@ teamDetailsRouter.get(['/:idTeam', '/:idTeam/form','/:idTeam/upcoming','/:idTeam
     const leagueController = new LeagueController(process.env.API_KEY);
 
     if (!req.session.league_teams) {
-        const teams = await leagueController.getLeagueTeamsFromApi();
+        const teams = await leagueController.listLeagueTeamsFromFile();
         req.session.league_teams = teams;
     }
 
-    console.log('selected team in session: ', req.session.selectedTeam ? true : false);
+    console.log('selected team in session: ', req.session.selectedTeamDetails ? true : false);
 
-    const teamController = new TeamController(process.env.API_KEY, (req.session.league_teams ? req.session.league_teams : undefined));
     let teamDetails;
 
-    if (req.session.selectedTeam && req.session.selectedTeam.team_data.idTeam == req.params.idTeam) {
+    if (req.session.selectedTeamDetails && req.session.selectedTeamDetails.team_data.idTeam == req.params.idTeam) {
         console.log('GET FROM SESSION');
-        teamDetails = req.session.selectedTeam;
+        teamDetails = req.session.selectedTeamDetails;
 
     } else {
+        const selectedTeam = leagueController.getLeagueTeamFromFile(req.params.idTeam);
+        const teamController = new TeamController(process.env.API_KEY, (req.session.league_teams ? req.session.league_teams : undefined), selectedTeam);
+
+        console.log('GET TEAM DETAILS');
         teamDetails = await teamController.getAllTeamDetails(req.params.idTeam);
-        req.session.selectedTeam = teamDetails;
+        req.session.selectedTeamDetails = teamDetails;
     }
+
+    // console.log(teamDetails.previous_games);
 
     const activeSection = path.basename(req.path);
     console.log(activeSection);

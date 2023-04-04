@@ -9,7 +9,7 @@ class HomeController {
         this.leagueId = 4849;
         this.sessionLeagues = sessionLeagues
         this.API = new apiClass(this.apiKey);
-        this.teamController = new TeamController(this.apiKey, this.sessionLeagues);
+        this.teamController = new TeamController(this.apiKey, this.sessionLeagues, null);
     }
 
     getHomeData = async () => {

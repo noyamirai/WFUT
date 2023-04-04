@@ -3,14 +3,21 @@
         
         <li>
             <span><%= event.dateStringShort %></span>
-            <div class="team-wrapper">                
-                <img src="<%= event.homeTeamData.strTeamBadge %>" alt="<%= event.strHomeTeam %> logo">
+            <div class="team-wrapper">      
+                <picture>
+                    <source width="35" height="auto" srcset="<%= event.homeTeamData.strTeamBadgeWebp ?? event.homeTeamData.strTeamBadge %>" type="image/webp">
+                    <img width="28" height="28" src="<%= event.homeTeamData.strTeamBadge %>" alt="<%= event.strHomeTeam %> logo">
+                </picture>
+          
                 <h3><%= event.strHomeTeam %></h3>
 
             </div>
     
-            <div class="team-wrapper">                
-                <img src="<%= event.awayTeamData.strTeamBadge %>" alt="<%= event.strAwayTeam %> logo">
+            <div class="team-wrapper">   
+                <picture>
+                    <source width="35" height="auto" srcset="<%= event.awayTeamData.strTeamBadgeWebp ?? event.homeTeamData.strTeamBadge %>" type="image/webp">
+                    <img width="28" height="28" src="<%= event.awayTeamData.strTeamBadge %>" alt="<%= event.strHomeTeam %> logo">
+                </picture>             
                 <h3><%= event.strAwayTeam %></h3>
 
             </div>

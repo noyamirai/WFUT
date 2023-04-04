@@ -21,10 +21,11 @@ dashRouter.get('/', async (req, res) => {
         console.log('No home data in session yet! Fetch and save');
 
         const leagueController = new LeagueController(process.env.API_KEY);
-        const leagueTeams = await leagueController.getLeagueTeamsFromApi();
+        const leagueTeams = await leagueController.listLeagueTeamsFromFile();
+
         req.session.league_teams = leagueTeams;
 
-        const teamController = new TeamController(process.env.API_KEY, (req.session.league_teams ? req.session.league_teams : undefined));
+        const teamController = new TeamController(process.env.API_KEY, (req.session.league_teams ? req.session.league_teams : undefined), null);
         const upcomingGames = await teamController.setUpcomingEvents();
 
         homeData.push({

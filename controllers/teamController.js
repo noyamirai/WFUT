@@ -5,27 +5,13 @@ import fs from 'fs';
 
 class TeamClass {
 
-    constructor(api_key, sessionLeagues) {
+    constructor(api_key, sessionLeagues, selectedTeam) {
         this.apiKey = api_key;
         this.sessionLeagues = sessionLeagues;
         this.leagueId = 4849;
         this.API = new apiClass(this.apiKey);
+        this.selectedTeam = selectedTeam;
     }
-
-    // getTeamData = (idTeam) => {
-
-    //     let leagueTeamsFile = fs.readFileSync('./src/league_teams.json', 'utf8');
-    //     const jsonData = JSON.parse(leagueTeamsFile);
-
-    //     let foundObject = jsonData.find(obj => obj.idTeam == idTeam);
-        
-    //     if (!foundObject) {
-    //         return [];
-    //     }
-
-    //     return foundObject;
-
-    // }
 
     getTeamData = async (sessionDataArray, idTeam) => {
 
@@ -34,32 +20,40 @@ class TeamClass {
 
         console.log('getting data for team id: ', idTeam);
 
-        // Session available
-        if (sessionDataArray) {
-            // find team id in session
-            foundObjectInSession = sessionDataArray.find(obj => obj.idTeam == idTeam);
+        // Selected team -> no need to search
+        if (this.selectedTeam && idTeam == this.selectedTeam.idTeam) {
+            console.log('team id is selected team!');
+            teamData = this.selectedTeam;
 
-            // team exists in current session 
-            if (foundObjectInSession) {
-                console.log('found in session');
-                teamData = foundObjectInSession;
+        } else {
+            console.log('team id is not selected team');
 
-                teamData.strTeamBadge = `/static/teams/team_logo-${teamData.idTeam}.png`;
-                teamData.strTeamBadgeWebp = `/static/teams/team_logo-${teamData.idTeam}.webp`;
+            // Session available
+            if (sessionDataArray) {
+
+                // find team id in session
+                foundObjectInSession = sessionDataArray.find(obj => obj.idTeam == idTeam);
+
+                // team exists in current session 
+                if (foundObjectInSession) {
+                    console.log('found in session');
+                    teamData = foundObjectInSession;
+                }
             }
-        }
 
-        // team unknown
-        if (!teamData || teamData.length == 0) {
-            console.log('nothing found -> fetch data');
-            const jsonTeamData = await this.API.getJsonData(`lookupteam.php?id=${idTeam}`);
+            // team unknown
+            if (!teamData || teamData.length == 0) {
+                console.log('nothing found -> fetch data');
+                const jsonTeamData = await this.API.getJsonData(`lookupteam.php?id=${idTeam}`);
 
-            if (jsonTeamData.failed) {
-                return [];
+                if (jsonTeamData.failed) {
+                    return [];
+                }
+                
+                teamData = jsonTeamData[0];
+                teamData.strTeamBadgeWebp = null;
             }
-            
-            teamData = jsonTeamData[0];
-            teamData.strTeamBadgeWebp = null;
+
         }
 
         return teamData;
@@ -83,7 +77,7 @@ class TeamClass {
         return {'homeTeam': homeTeam, 'awayTeam': awayTeam };
     }
 
-    setTeamData = async (dataArray, onlyTeamData = false) => {
+    setTeamData = async (dataArray) => {
 
         if (Array.isArray(dataArray)) {
 
@@ -93,7 +87,7 @@ class TeamClass {
         
             for (const event of dataArray) {
                 // console.log('POPULATING TEAMS');
-                let newEvent = await this.populateTeams(event, onlyTeamData);
+                let newEvent = await this.populateTeams(event);
 
                 result.push(newEvent);
             };
@@ -103,20 +97,20 @@ class TeamClass {
 
         // console.log('SINGULAR TEAM DETAILS');
         // console.log('POPULATING TEAMS');
-        return await this.populateTeams(dataArray, onlyTeamData);
+        return await this.populateTeams(dataArray);
     }
 
-    populateTeams = async (dataArray, onlyTeamData = false) => {
+    populateTeams = async (dataArray) => {
 
         let newTeams = [];
 
-        if (!this.sessionLeagues) {
-            // console.log('no league teams in session -> get data for both');
-            const fetchData = await this.getHomeAndAwayTeamData(dataArray.idHomeTeam, dataArray.idAwayTeam);
-            newTeams[0] = fetchData.homeTeam;
-            newTeams[1] = fetchData.awayTeam;
+        // if (!this.sessionLeagues) {
+        //     // console.log('no league teams in session -> get data for both');
+        //     const fetchData = await this.getHomeAndAwayTeamData(dataArray.idHomeTeam, dataArray.idAwayTeam);
+        //     newTeams[0] = fetchData.homeTeam;
+        //     newTeams[1] = fetchData.awayTeam;
             
-        } else {
+        // } else {
             // console.log('checking home and away teams from session');
 
             const homeTeamDataFromSession = await this.getTeamData(this.sessionLeagues, dataArray.idHomeTeam);
@@ -145,7 +139,7 @@ class TeamClass {
                 };
 
             }
-        }
+        // }
 
         // console.log('attaching additional team data');
         const homeTeamData = newTeams[0];
@@ -154,7 +148,7 @@ class TeamClass {
         dataArray.homeTeamData = homeTeamData;
         dataArray.awayTeamData = awayTeamData;
 
-        if (!onlyTeamData) {
+        // if (!onlyTeamData) {
             // console.log('set date strings');
             const formattedDateShort = getFormattedDate(dataArray.dateEvent, true);
             dataArray.dateStringShort = formattedDateShort;
@@ -163,7 +157,7 @@ class TeamClass {
             dataArray.dateString = formattedDate;
             
             dataArray.localTime = getLocalTime(dataArray.strTimestamp);
-        }
+        // }
 
         return dataArray;
     }
@@ -186,23 +180,17 @@ class TeamClass {
             `lookup_all_players.php?id=${idTeam}`, // squad
         ];
 
-        let jsonTeamData;
-
-        jsonTeamData = await this.getTeamData(this.sessionLeagues, idTeam);
+        let jsonTeamData = this.selectedTeam;
 
         const fetchData = await this.API.getMultipleJsonDatas(fetches);
-
-        // console.log('multiple fetches performed');
 
         const jsonPrevGamesData = fetchData[0];
         const jsonNextGamesData = fetchData[1];
         const jsonSquadData = fetchData[2];
 
-        // console.log('set prev games data');
         const prevGames = await this.setTeamData(jsonPrevGamesData);
 
         const sortedEvents = jsonNextGamesData.sort(this.sortByDate);
-        // console.log('set upcoming game data');
         const upcomingGame = await this.setTeamData(sortedEvents[0]);
         sortedEvents.shift();
 
