@@ -9,10 +9,18 @@ class LeagueController {
     }
 
     listLeagueTeamsFromFile = () => {
-        let leagueTeamsFile = fs.readFileSync('./src/league_teams.json', 'utf8');
-        const jsonData = JSON.parse(leagueTeamsFile);
 
-        return jsonData;
+        try {
+            let leagueTeamsFile = fs.readFileSync('./src/league_teams.json', 'utf8');
+            
+            const jsonData = JSON.parse(leagueTeamsFile);
+            return jsonData;
+            
+        } catch (error) {
+            console.log(error);
+            return [];
+        }
+        
     }
 
     listLeagueTeamsFromApi = async () => {

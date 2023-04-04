@@ -46,12 +46,18 @@ class TeamClass {
                 console.log('nothing found -> fetch data');
                 const jsonTeamData = await this.API.getJsonData(`lookupteam.php?id=${idTeam}`);
 
-                if (jsonTeamData.failed) {
-                    return [];
+                if (jsonTeamData.length == 0) {
+                    teamData = {
+                            "strTeam": "Unknown",
+                            // "strTeamBadge":  "/static/images/teams/team_logo-140219.png",
+                            // "strTeamBadgeWebp":  "/static/images/teams/team_logo-140219.webp",
+                            "idTeam": "00000"
+                        }
+                } else {
+                    teamData = jsonTeamData[0];
+                    teamData.strTeamBadgeWebp = null;
                 }
                 
-                teamData = jsonTeamData[0];
-                teamData.strTeamBadgeWebp = null;
             }
 
         }
@@ -61,103 +67,55 @@ class TeamClass {
 
     getHomeAndAwayTeamData = async (idHomeTeam, idAwayTeam) => {
                         
-        const fetches = [
-            `lookupteam.php?id=${idHomeTeam}`,
-            `lookupteam.php?id=${idAwayTeam}`
-        ];
+        const ids = [ idHomeTeam, idAwayTeam ];
 
-        const fetchData = await this.API.getMultipleJsonDatas(fetches);
+        const eventTeams = ids.map(async (idTeam) => {
+            const team = await this.getTeamData(this.sessionLeagues, idTeam);
 
-        let homeTeam = fetchData[0][0];
-        let awayTeam = fetchData[1][0];
+            if (team.strTeam.toLowerCase() != 'unknown') {
+                team.strTeamBadgeWebp = null;   
+            }
 
-        homeTeam.strTeamBadgeWebp = null;
-        awayTeam.strTeamBadgeWebp = null;
+            return team;
+        });
 
-        return {'homeTeam': homeTeam, 'awayTeam': awayTeam };
+        const [homeTeam, awayTeam] = await Promise.all(eventTeams);
+        return [ homeTeam, awayTeam ];
     }
 
     setTeamData = async (dataArray) => {
 
         if (Array.isArray(dataArray)) {
 
-            // console.log('MULTIPLE TEAM DETAILS');
-
             let result = [];
         
             for (const event of dataArray) {
-                // console.log('POPULATING TEAMS');
                 let newEvent = await this.populateTeams(event);
-
                 result.push(newEvent);
             };
 
             return result;
         }
 
-        // console.log('SINGULAR TEAM DETAILS');
-        // console.log('POPULATING TEAMS');
         return await this.populateTeams(dataArray);
     }
 
     populateTeams = async (dataArray) => {
 
-        let newTeams = [];
-
-        // if (!this.sessionLeagues) {
-        //     // console.log('no league teams in session -> get data for both');
-        //     const fetchData = await this.getHomeAndAwayTeamData(dataArray.idHomeTeam, dataArray.idAwayTeam);
-        //     newTeams[0] = fetchData.homeTeam;
-        //     newTeams[1] = fetchData.awayTeam;
-            
-        // } else {
-            // console.log('checking home and away teams from session');
-
-            const homeTeamDataFromSession = await this.getTeamData(this.sessionLeagues, dataArray.idHomeTeam);
-            const awayTeamDataFromSession = await this.getTeamData(this.sessionLeagues, dataArray.idAwayTeam);
-            const eventTeams = [homeTeamDataFromSession, awayTeamDataFromSession];
-            const allUnknown = eventTeams.every(value => value === false);
-
-            if (allUnknown) {
-                // console.log('both still unknown');
-                const fetchData = await this.getHomeAndAwayTeamData(dataArray.idHomeTeam, dataArray.idAwayTeam);
-                newTeams[0] = fetchData.homeTeam;
-                newTeams[1] = fetchData.awayTeam;
-
-            } else {
-
-                // console.log('one team unknown');
-                for(let teamData of eventTeams) {
-                    
-                    if (teamData.failed) {
-                        // console.log('fetch extra team data');
-                        const newTeamData = await this.getTeamData(teamData.idTeam);
-                        teamData = newTeamData
-                    }
-
-                    newTeams.push(teamData);
-                };
-
-            }
-        // }
-
-        // console.log('attaching additional team data');
-        const homeTeamData = newTeams[0];
-        const awayTeamData = newTeams[1];
+        const teams = await this.getHomeAndAwayTeamData(dataArray.idHomeTeam, dataArray.idAwayTeam);        
+        const homeTeamData = teams[0];
+        const awayTeamData = teams[1];
 
         dataArray.homeTeamData = homeTeamData;
         dataArray.awayTeamData = awayTeamData;
 
-        // if (!onlyTeamData) {
-            // console.log('set date strings');
-            const formattedDateShort = getFormattedDate(dataArray.dateEvent, true);
-            dataArray.dateStringShort = formattedDateShort;
-            
-            const formattedDate = getFormattedDate(dataArray.dateEvent);
-            dataArray.dateString = formattedDate;
-            
-            dataArray.localTime = getLocalTime(dataArray.strTimestamp);
-        // }
+        const formattedDateShort = getFormattedDate(dataArray.dateEvent, true);
+        dataArray.dateStringShort = formattedDateShort;
+        
+        const formattedDate = getFormattedDate(dataArray.dateEvent);
+        dataArray.dateString = formattedDate;
+        
+        dataArray.localTime = getLocalTime(dataArray.strTimestamp);
 
         return dataArray;
     }
@@ -165,14 +123,16 @@ class TeamClass {
     listPreviousGamesByTeam = async (idTeam) => {
 
         const jsonPrevGamesData = await this.API.getJsonData(`eventslast.php?id=${idTeam}`);
-        const prevGames = await this.setTeamData(jsonPrevGamesData);
 
+        if (jsonPrevGamesData.length == 0) {
+            return jsonPrevGamesData;
+        }
+
+        const prevGames = await this.setTeamData(jsonPrevGamesData);
         return prevGames;
     }
 
     getAllTeamDetails = async (idTeam) => {
-
-        console.log('get details');
         
         const fetches = [
             `eventslast.php?id=${idTeam}`, // prev games

@@ -8,10 +8,10 @@
                 
                 <picture>
                     <source width="35" height="auto" srcset="<%= event.homeTeamData.strTeamBadgeWebp ?? event.homeTeamData.strTeamBadge %>" type="image/webp">
-                    <img width="28" height="28" src="<%= event.homeTeamData.strTeamBadge %>" alt="<%= event.strHomeTeam %> logo">
+                    <img width="28" height="28" src="<%= event.homeTeamData.strTeamBadge %>" alt="<%= event.homeTeamData.strTeam %> logo">
                 </picture>
 
-                <h3><%= event.strHomeTeam %></h3>
+                <h3><%= event.homeTeamData.strTeam %></h3>
 
             </div>
     
@@ -19,11 +19,11 @@
                 <span class="<%= event.intAwayScore > event.intHomeScore ? 'win' : 'loss' %>"><%= event.intAwayScore %></span>
                 
                 <picture>
-                    <source width="35" height="auto" srcset="<%= event.awayTeamData.strTeamBadgeWebp ?? event.homeTeamData.strTeamBadge %>" type="image/webp">
-                    <img width="28" height="28" src="<%= event.awayTeamData.strTeamBadge %>" alt="<%= event.strHomeTeam %> logo">
+                    <source width="35" height="auto" srcset="<%= event.awayTeamData.strTeamBadgeWebp ?? event.awayTeamData.strTeamBadge %>" type="image/webp">
+                    <img width="28" height="28" src="<%= event.awayTeamData.strTeamBadge %>" alt="<%= event.awayTeamData.strTeam %> logo">
                 </picture>
 
-                <h3><%= event.strAwayTeam %></h3>
+                <h3><%= event.awayTeamData.strTeam %></h3>
 
             </div>
     

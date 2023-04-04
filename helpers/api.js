@@ -37,6 +37,12 @@ class ApiClass {
 
             if (response.ok) {
                 const data = await response.json();
+                const dataResultKey = getResultKey(data);
+
+                if (!data[dataResultKey] || data[dataResultKey].length == 0) {
+                    return { failed: true, error:`No data found`, data: []};
+                }
+
                 return data;
             }
 

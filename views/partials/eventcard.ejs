@@ -6,10 +6,10 @@
     <div class="team-wrapper">
         <picture>
             <source width="35" height="auto" srcset="<%= data.homeTeamData.strTeamBadgeWebp ?? data.homeTeamData.strTeamBadge %>" type="image/webp">
-            <img width="35" height="auto" src="<%= data.homeTeamData.strTeamBadge %>" alt="<%= data.strHomeTeam %> logo">
+            <img width="35" height="auto" src="<%= data.homeTeamData.strTeamBadge %>" alt="<%= data.homeTeamData.strTeam %> logo">
         </picture>
 
-        <h3><%= data.strHomeTeam %></h3>
+        <h3><%= data.homeTeamData.strTeam %></h3>
     </div>
 
     <div class="game-info">
@@ -23,10 +23,10 @@
     <div class="team-wrapper">
         <picture>
             <source width="35" height="auto" srcset="<%= data.awayTeamData.strTeamBadgeWebp ?? data.awayTeamData.strTeamBadge %>" type="image/webp">
-            <img width="35" height="auto" src="<%= data.awayTeamData.strTeamBadge %>" alt="<%= data.strAwayTeam %> logo">
+            <img width="35" height="auto" src="<%= data.awayTeamData.strTeamBadge %>" alt="<%= data.awayTeamData.strTeam %> logo">
         </picture>
 
-        <h3><%= data.strAwayTeam %></h3>
+        <h3><%= data.awayTeamData.strTeam %></h3>
     </div>
 
     <picture>

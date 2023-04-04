@@ -19,7 +19,11 @@ teamDetailsRouter.get(['/:idTeam', '/:idTeam/form','/:idTeam/upcoming','/:idTeam
     const leagueController = new LeagueController(process.env.API_KEY);
 
     if (!req.session.league_teams) {
-        const teams = await leagueController.listLeagueTeamsFromFile();
+        let teams = await leagueController.listLeagueTeamsFromFile();
+
+        if (teams.length == 0)
+            teams = await leagueController.listLeagueTeamsFromApi();
+
         req.session.league_teams = teams;
     }
 
@@ -40,10 +44,7 @@ teamDetailsRouter.get(['/:idTeam', '/:idTeam/form','/:idTeam/upcoming','/:idTeam
         req.session.selectedTeamDetails = teamDetails;
     }
 
-    // console.log(teamDetails.previous_games);
-
     const activeSection = path.basename(req.path);
-    console.log(activeSection);
     req.app.locals.activeItem =  (menuItems[activeSection] ? activeSection : 'form');
 
     res.render('layout', {

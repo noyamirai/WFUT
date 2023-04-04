@@ -2,7 +2,6 @@ import { getPageContent, onLinkNavigate } from '/scripts/utils.js';
 
 onLinkNavigate(async ({ toPath, fromPath }) => {
   let content;
-  let handleLazyLoad = false;
   let loaderShown = false;
 
   const cache = await caches.open('other-cache');
@@ -19,11 +18,27 @@ onLinkNavigate(async ({ toPath, fromPath }) => {
     showLoader(loaderType);
   }
 
-  if (!cachedResponse && toPath.includes('team-details') && toPath.includes('squad')) {
-    handleLazyLoad = true;
-  }
-
+  console.log('initiating fetch');
   content = await getPageContent(toPath);
+
+  // console.log('content: ', content);
+  console.log('cached content: ', cachedResponse);
+  console.log('loader shown: ', loaderShown);
+
+  // if (cachedResponse) {
+  //   const parser = new DOMParser();
+  //   const doc = parser.parseFromString(content, "text/html");
+
+  //   const lazyImages = doc.querySelectorAll('img[loading="lazy"]');
+
+  //   lazyImages.forEach((img) => {
+  //       setStyling(img);
+  //   });
+
+  //   content = doc.body.innerHTML;
+  // }
+
+  console.log(content);
 
   if (loaderShown) {
 
@@ -49,13 +64,11 @@ onLinkNavigate(async ({ toPath, fromPath }) => {
 
     document.body.innerHTML = content; 
 
-    if (handleLazyLoad) {
-      lazyLoadHandler();
-    }
-
     if (loaderShown) {
       hideLoader(loaderType);
     }
+
+    lazyLoadHandler(cachedResponse);
 
   });
 });

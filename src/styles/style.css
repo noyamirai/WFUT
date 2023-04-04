@@ -82,6 +82,8 @@ body.error {
 ============================================================================= */
 .hide { display: none; }
 *.hide {display: none!important; }
+.hidden { opacity: 0; }
+*.hidden { opacity: 0!important; }
 
 /* Text aligns */
 .ta-left { text-align: left; }
