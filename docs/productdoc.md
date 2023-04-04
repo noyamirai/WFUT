@@ -199,4 +199,9 @@ onLinkNavigate(async ({ toPath, fromPath }) => {
 
 As you can see in the snippet above, I also implemented (with help of chatGPT) a check to see when player images are fully loaded, since I added the `loading="true"` attribute to the images. Before they are loaded in, in CSS I create a skeleton animation effect to let the user know the images are on their way! This ensures that the images of players are fully loaded when navigating to the squad page. This improved the overal performance and user experience a lot. See video comparison below.
 
-<a href="https://drive.google.com/file/d/1YEipBEdEUmHkuTLvdJyawfTvZw6jQetf/view?usp=share_link" target="_blank">Video comparison of OLD vs NEW performance</a>
+<div style="position:relative;width:fit-content;height:fit-content;">
+    <a style="position:absolute;top:20px;right:1rem;opacity:0.8;" href="https://clipchamp.com/watch/jroS8LJr2Ol?utm_source=embed&utm_medium=embed&utm_campaign=watch">
+        <img style="height:22px;" src="https://clipchamp.com/e.svg" alt="Made with Clipchamp" />
+    </a>
+    <iframe allow="autoplay;" allowfullscreen style="border:none" src="https://clipchamp.com/watch/jroS8LJr2Ol/embed" width="640" height="360"></iframe>
+</div>
