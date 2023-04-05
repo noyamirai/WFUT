@@ -105,11 +105,8 @@ app.get('/teamlogopaths', (req, res) => {
 app.get('*', (req, res) => {
 
     res.render('layout', {
-        'view': 'blanco',
+        'view': '404',
         'bodyClass': 'error',
-        'partial': './partials/message', 
-        'messageTitle': 'Oops!', 
-        'messageSubTitle': 'Page not found'
     });
 })
 

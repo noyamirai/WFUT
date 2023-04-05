@@ -16,7 +16,7 @@
     "build:js": "node scripts/build-js.js",
     "postbuild": "node scripts/revision-hash.js",
     "watch": "run-p watch:*",
-    "watch:css": "chokidar 'src/styles/*.css' --command 'npm run build:css'",
+    "watch:css": "chokidar 'src/styles/*.css' --command 'npm run build:css && npm run postbuild'",
     "watch:assets": "chokidar 'src/fonts/*.*' --command 'npm run build:assets'",
     "watch:img": "chokidar 'src/images/*.*' --command 'npm run build:img'",
     "watch:js": "chokidar 'src/js/*.*' --command 'npm run build:js'"

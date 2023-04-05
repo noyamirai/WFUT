@@ -99,6 +99,7 @@ body.error {
 
 
 .solid-body {
+  border-radius: 7px;
   padding: 18px;
   background-color: #22242c;
 }
@@ -134,41 +135,6 @@ h2 {
   margin-bottom: 18px;
 }
 
-.home h2 {
-  text-align: center;
-}
-
-h2:has(.identifier) {
-    display: flex;
-    align-items: center;
-}
-
-.identifier {
-  margin-left: 6px;
-
-  font-size: 14px;
-  font-size: 1.4rem;
-
-  font-weight: 500;
-  color: #B9B9B9;
-}
-
-.text__bubble {
-    display: inline-block;
-    
-    padding: 4px 12px;
-    margin-top: 8px;
-        
-    border-radius: 20px;
-        
-    font-size: 12px;
-    font-size: 1.2rem;
-    font-weight: 600;
-    
-    background-color: var(--accent-color);
-
-    width: max-content;
-}
 /* =============================================================================
   #NAV
 ============================================================================= */
@@ -205,11 +171,13 @@ nav {
   #MAIN
 ============================================================================= */
 main {
-  padding: 18px;
+  padding: 18px 18px 40px 18px;
   max-width: 800px;
 }
 
-section + section { margin-top: var(--default-padding); }
+.home section + section { margin: 0; }
+
+section + section { margin-top: 24px; }
 section.scrollable { padding-right: 0; }
 
 /* =============================================================================
@@ -779,14 +747,19 @@ button {
 
   padding: 6px 8px;
   border-radius: 3px;
-  background-color: var(--accent-color);
 
-  color: var(--white);
+  background-color: #5800ff;
+  color: #10ffc4;
+
   text-decoration: none;
 
   font-weight: 600;
 
   min-width: 100px;
+}
+
+.error .btn {
+  padding: 12px;
 }
 
 * + .btn {
@@ -916,3 +889,49 @@ button {
     .widget--squad picture.loaded::after {
       display: none;
     }
+
+
+.marquee {
+    display: flex;
+    overflow: hidden;
+    padding: 12px;
+    background-color: #0fffc5;
+    gap: 6px;
+
+    border-radius: 6px;
+    margin: 20px 0;
+    /* margin: 20px -18px 20px -18px; */
+}
+
+.marquee-content {
+    display: flex;
+    /* min-width: 100%; */
+    justify-content: space-around;
+    flex: 0 0 auto;
+}
+
+.scroll {
+    animation: scroll 4s linear infinite;
+}
+
+.text-block {
+  color: #00BD8F;
+  font-size: 6vw;
+  line-height: 1;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - 6px));
+  }
+}
+
+.reverse {
+  animation-direction: reverse;
+}

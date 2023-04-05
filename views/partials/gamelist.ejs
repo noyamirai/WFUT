@@ -5,7 +5,8 @@
     </div>
 
 <% } else {%>
-    <h2>Upcoming games</h2>
+
+    <%- include ('marquee.ejs', { heading: 'Upcoming games' }) -%>
 
     <% for(let key in data) {%>
         <h3><%= key %></h3>

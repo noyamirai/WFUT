@@ -14,7 +14,4 @@ return gulp.src([
     .pipe(gulp.dest(`./static/`))
     .pipe(rev.manifest('rev-manifest.json'))
     .pipe(gulp.dest(`./static/`))
-    .on('end', async function() {
-      await deleteAsync(['./static/index.css', './static/index.js']);
-    });
 })();
