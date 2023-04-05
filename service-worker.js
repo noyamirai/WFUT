@@ -5,6 +5,7 @@ const CORE_ASSETS = [
   '/static/index.css',
   '/static/football-pitch.svg',
   '/static/wfut-logo.svg',
+  '/static/dummy-logo.svg',
   '/teamlogopaths',
   '/Poppins-Bold.ttf',
   '/Poppins-ExtraBold.ttf',

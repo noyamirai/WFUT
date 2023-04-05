@@ -24,11 +24,23 @@ teamDetailsRouter.get(['/:idTeam', '/:idTeam/form','/:idTeam/upcoming','/:idTeam
         if (teams.length == 0)
             teams = await leagueController.listLeagueTeamsFromApi();
 
+        if (teams.length == 0) {
+
+            res.render('layout', {
+                'view': 'blanco',
+                'bodyClass': 'error',
+                'partial': './partials/message', 
+                'messageTitle': 'Oopsie', 
+                'messageSubTitle': "We weren't able to retrieve any league teams.."
+            });
+
+            return;
+        }
+
         req.session.league_teams = teams;
     }
 
     console.log('selected team in session: ', req.session.selectedTeamDetails ? true : false);
-
     let teamDetails;
 
     if (req.session.selectedTeamDetails && req.session.selectedTeamDetails.team_data.idTeam == req.params.idTeam) {
@@ -37,6 +49,19 @@ teamDetailsRouter.get(['/:idTeam', '/:idTeam/form','/:idTeam/upcoming','/:idTeam
 
     } else {
         const selectedTeam = leagueController.getLeagueTeamFromFile(req.params.idTeam);
+        // const selectedTeam = [];
+
+        if (selectedTeam.length == 0) {
+
+            res.render('layout', {
+                'view': 'team-details',
+                'teamDetails': [],
+                'menuItems': menuItems,
+            });
+            
+            return;
+        }
+
         const teamController = new TeamController(process.env.API_KEY, (req.session.league_teams ? req.session.league_teams : undefined), selectedTeam);
 
         console.log('GET TEAM DETAILS');

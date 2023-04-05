@@ -1,6 +1,12 @@
 <section class="widget widget--<%= (typeof widgetClass == 'undefined' ? partial : widgetClass) %>" data-widget-<%= partial ?? (typeof widgetClass == 'undefined' ? '' : widgetClass) %>>
     <%- include (`loader.ejs`, { className: 'loader--widget' }) -%>
     <div data-widget-content>
-        <%- include (`${partial}.ejs`, {data: data }) -%>
+
+        <% if (data.length == 0 || (typeof data === 'object' && Object.keys(data).length == 0)) { %>
+            <%- include (`message.ejs`, {messageTitle: 'hehe', messageSubTitle: 'no data' }) -%>
+        <% } else { %>
+            <%- include (`${partial}.ejs`, {data: data }) -%>
+        <% } %>
+        
     </div>
 </section>

@@ -10,6 +10,8 @@ import session from 'express-session';
 import cacheManager from './middleware/cacheManager.js';
 import compression from 'compression';
 
+const revManifest = JSON.parse(fs.readFileSync('./static/rev-manifest.json'));
+
 dotenv.config();
 
 import setManifestConfig from './middleware/manifestConfig.js';
@@ -22,6 +24,7 @@ const port = process.env.PORT || 9000;
 const sessionLength = (1000 * 60 * 60 * 24) * 7; // 1 day
 
 app.locals.fs = fs;
+app.locals.revManifest = revManifest;
 
 // SET TEMPLATE ENGINE
 app.set('view engine', 'ejs');
@@ -52,7 +55,7 @@ app.get('/offline', (req, res) => {
 
     res.render('layout', {
         'view': 'offline',
-        'bodyClass': 'error',
+        'bodyClass': 'error error--offline',
     });
 });
 

@@ -25,6 +25,19 @@ dashRouter.get('/', async (req, res) => {
 
         if (leagueTeams.length == 0)
             leagueTeams = await leagueController.listLeagueTeamsFromApi();
+        
+        if (leagueTeams.length == 0) {
+
+            res.render('layout', {
+                'view': 'blanco',
+                'bodyClass': 'error',
+                'partial': './partials/message', 
+                'messageTitle': 'Oopsie', 
+                'messageSubTitle': "We weren't able to retrieve any league teams.."
+            });
+
+            return;
+        }
 
         req.session.league_teams = leagueTeams;
 

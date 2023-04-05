@@ -7,7 +7,7 @@ import cleanCSS from 'gulp-clean-css';
 return gulp.src([
     './src/styles/*.css',
   ])
-    .pipe(concat('index.css'))
+    .pipe(concat(`index.css`))
     .pipe(cleanCSS())
     .pipe(autoPrefixer({
       cascade: false

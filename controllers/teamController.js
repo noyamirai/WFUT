@@ -49,8 +49,8 @@ class TeamClass {
                 if (jsonTeamData.length == 0) {
                     teamData = {
                             "strTeam": "Unknown",
-                            // "strTeamBadge":  "/static/images/teams/team_logo-140219.png",
-                            // "strTeamBadgeWebp":  "/static/images/teams/team_logo-140219.webp",
+                            "strTeamBadge":  "/static/images/dummy-logo.svg",
+                            "strTeamBadgeWebp":  null,
                             "idTeam": "00000"
                         }
                 } else {
@@ -148,26 +148,56 @@ class TeamClass {
         const jsonNextGamesData = fetchData[1];
         const jsonSquadData = fetchData[2];
 
-        const prevGames = await this.setTeamData(jsonPrevGamesData);
-
-        const sortedEvents = jsonNextGamesData.sort(this.sortByDate);
-        const upcomingGame = await this.setTeamData(sortedEvents[0]);
-        sortedEvents.shift();
-
-        const upcomingGames = await this.setUpcomingEvents(sortedEvents);
+        let prevGames = [];
+        let upcomingGames = [];
         
+        let upcomingGame = {
+                                idEvent: null,
+                                homeTeamData: {
+                                    "strTeam": "Unknown",
+                                    "strTeamBadge":  "/static/images/dummy-logo.svg",
+                                    "strTeamBadgeWebp":  null,
+                                    "idTeam": "00000"
+                                },
+                                awayTeamData: {
+                                    "strTeam": "Unknown",
+                                    "strTeamBadge":  "/static/images/dummy-logo.svg",
+                                    "strTeamBadgeWebp":  null,
+                                    "idTeam": "00000"
+                                }
+                            }
+
         let squadArray = {};
-        
-        // Transform the squad array into an object with keys based on player positions
-        jsonSquadData.forEach((player) => {
 
-            // create position in array
-            if (!squadArray[player.strPosition]) {
-                squadArray[player.strPosition] = [];
-            }
+        if (jsonPrevGamesData.length > 0) {
+            prevGames = jsonPrevGamesData;
+            prevGames = await this.setTeamData(jsonPrevGamesData);
+        }
 
-            squadArray[player.strPosition].push(player);
-        });
+        if (jsonNextGamesData.length > 0) {
+            const sortedEvents = jsonNextGamesData.sort(this.sortByDate);
+            upcomingGame = await this.setTeamData(sortedEvents[0]);
+
+            sortedEvents.shift();
+    
+            upcomingGames = await this.setUpcomingEvents(sortedEvents);
+        }
+
+        if (jsonSquadData.length > 0) {
+
+            // Transform the squad array into an object with keys based on player positions
+            jsonSquadData.forEach((player) => {
+
+                // create position in array
+                if (!squadArray[player.strPosition]) {
+                    squadArray[player.strPosition] = [];
+                }
+
+                squadArray[player.strPosition].push(player);
+            });
+
+            
+        }
 
         const result = {
             'team_data': jsonTeamData,

@@ -3,13 +3,26 @@
 
     <span class="circle"></span>
     <div class="logo-wrapper">
-        <picture class="logo">
-            <source srcset="<%= teamData.strTeamBadgeWebp ?? teamData.strTeamBadge %>" type="image/webp">
-            <img src="<%= teamData.strTeamBadge %>" alt="<%= teamData.strTeam %>">
-        </picture>
-        <div>
-            <h1>Overview</h1>
-            <h2><%= teamData.strTeam %></h1>
-        </div>
+        <% if (teamData.length == 0) { %>
+
+            <picture class="logo">
+                <source srcset="/static/images/dummy-logo.svg" type="image/svg">
+                <img src="/static/images/dummy-logo.svg" alt="Dummy logo">
+            </picture>
+            <div>
+                <h1>Overview</h1>
+                <h2>Unknown team</h1>
+            </div>
+
+        <% } else { %>
+            <picture class="logo">
+                <source srcset="<%= teamData.strTeamBadgeWebp ?? teamData.strTeamBadge %>" type="image/webp">
+                <img src="<%= teamData.strTeamBadge %>" alt="<%= teamData.strTeam %>">
+            </picture>
+            <div>
+                <h1>Overview</h1>
+                <h2><%= teamData.strTeam %></h1>
+            </div>
+        <% } %>
     </div>
 </header>

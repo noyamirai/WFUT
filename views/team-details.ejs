@@ -1,32 +1,42 @@
 <main >
-    <%- include ('partials/team-header.ejs', { teamData: teamDetails.team_data }) -%>
 
-    <div class="fixedItem">
+    <% if (teamDetails.length == 0) { %>
 
-        <%- include ('./partials/eventcard.ejs', { data: teamDetails.up_next, isList: false }) -%>
+        <%- include ('partials/team-header.ejs', { teamData: [] }) -%>
 
-        <nav>
-            <ul class="menu menu--toggle">
-            
-                <% for(let key in menuItems) { %>
-                    <li class="<%= activeItem == key ? 'active' : '' %>" >
-                        <a href="/team-details/<%= teamDetails.team_data.idTeam %><%= activeItem == key ? '' : (key == 'form' ? '' : `/${key}`) %>"><%= menuItems[key] %></a>
-                    </li>
-                <% } %>
-            </ul>
-        </nav>
+        <%- include ('partials/message.ejs', { messageTitle: 'Strange...', messageSubTitle: "We weren't able to find the team you're looking for"}) -%>
 
-    </div>
-    
-    <% if(activeItem == 'form') {%>
-        <%- include ('./partials/widget.ejs', { partial: 'teamform', widgetClass: '', data: teamDetails.previous_games }) -%>
-    <% } else if (activeItem == 'upcoming') { %>
-        <%- include ('./partials/widget.ejs', { partial: 'gamelist', widgetClass: 'game', data: teamDetails.upcoming_games }) -%>
-    <% } else if (activeItem == 'squad') { %>
-        <%- include ('./partials/widget.ejs', { partial: 'squad', widgetClass: 'squad', data: teamDetails.squad }) -%>
+    <% } else { %>
+
+        <%- include ('partials/team-header.ejs', { teamData: teamDetails.team_data }) -%>
+
+        <div class="fixedItem">
+
+            <% if (teamDetails.up_next.idEvent) { %>
+                <%- include ('./partials/eventcard.ejs', { data: teamDetails.up_next, isList: false }) -%>
+            <% } %>
+
+            <nav>
+                <ul class="menu menu--toggle">
+                
+                    <% for(let key in menuItems) { %>
+                        <li class="<%= activeItem == key ? 'active' : '' %>" >
+                            <a href="/team-details/<%= teamDetails.team_data.idTeam %><%= activeItem == key ? '' : (key == 'form' ? '' : `/${key}`) %>"><%= menuItems[key] %></a>
+                        </li>
+                    <% } %>
+                </ul>
+            </nav>
+
+        </div>
+        
+        <% if(activeItem == 'form') {%>
+            <%- include ('./partials/widget.ejs', { partial: 'teamform', widgetClass: '', data: teamDetails.previous_games }) -%>
+        <% } else if (activeItem == 'upcoming') { %>
+            <%- include ('./partials/widget.ejs', { partial: 'gamelist', widgetClass: 'game', data: teamDetails.upcoming_games }) -%>
+        <% } else if (activeItem == 'squad') { %>
+            <%- include ('./partials/widget.ejs', { partial: 'squad', widgetClass: 'squad', data: teamDetails.squad }) -%>
+        <% } %>
+
     <% } %>
-
-
-    
 
 </main>

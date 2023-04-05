@@ -13,9 +13,9 @@
 <link rel="manifest" href="/manifest">
 <meta name="theme-color" content="#0fffc5">
 
-<link href="/static/index.css" rel="preload stylesheet" as="style" type="text/css">
+<link href="/static/<%= revManifest['index.css'] %>" rel="preload stylesheet" as="style" type="text/css">
 
 <!-- FONT AWESOME -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 
-<script defer type="module" src="/static/index.js"></script>
+<script defer type="module" src="/static/<%= revManifest['index.js'] %>"></script>

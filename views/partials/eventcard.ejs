@@ -3,6 +3,7 @@
 <% } else { %>
 <div class="event-card<%= typeof fixedItem == 'undefined' ? '' : (fixedItem ? ' fixedItem' : '') %>">
 <% } %>
+
     <div class="team-wrapper">
         <picture>
             <source width="35" height="auto" srcset="<%= data.homeTeamData.strTeamBadgeWebp ?? data.homeTeamData.strTeamBadge %>" type="image/webp">
@@ -27,7 +28,7 @@
         </picture>
 
         <h3><%= data.awayTeamData.strTeam %></h3>
-    </div>
+    </div>    
 
     <picture>
         <source width="240" height="auto" srcset="/static/images/wsl-logo.webp" type="image/webp">

@@ -4,7 +4,7 @@
    
     <% if (typeof allData == 'undefined') { %>
 
-        <%- include ('partials/widget.ejs', { partial: 'message', messageTitle: 'Hmm', messageSubTitle: 'No events found'}) -%>
+        <%- include ('partials/message.ejs', { messageTitle: 'Hmm', messageSubTitle: 'No events found'}) -%>
     <% } else { %>   
 
         <% for( let i = 0; i < allData.length; i++ ) { %>
