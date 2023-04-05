@@ -2,7 +2,7 @@
     <h3><%= squadPos %></h3>
     <ul>
         <% data[squadPos].forEach((player, i) => { %>
-            <li>
+            <li class="player__item">
                 <picture>
                     <img 
                     src="<%= player.strCutout ? player.strCutout : player.strThumb %>" 
@@ -14,7 +14,6 @@
                 </picture>
         
                 <h3><%= player.strPlayer %></h3>
-                <span><%= squadPos %></span>
             </li>
         <% }) %>
     </ul>

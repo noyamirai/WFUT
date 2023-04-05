@@ -1,39 +1,45 @@
 <% if (isList) { %>
- <li class="event-card">
+ <li class="event-card <%= data.strLeague != 'English Womens Super League' ? 'event-card--label' : '' %>">
 <% } else { %>
-<div class="event-card<%= typeof fixedItem == 'undefined' ? '' : (fixedItem ? ' fixedItem' : '') %>">
+<div class="event-card<%= typeof fixedItem == 'undefined' ? '' : (fixedItem ? ' fixedItem' : '') %><%= data.strLeague != 'English Womens Super League' ? 'event-card--label' : '' %>">
 <% } %>
 
-    <div class="team-wrapper">
+    <% if (data.strLeague != 'English Womens Super League') { %>
+        <span class="game-info__league"><%= data.strLeague %></span>
+    <% } %>
+
+    <div class="event-card__content">
+
+        <div class="team-wrapper">
+            <picture>
+                <source width="35" height="auto" srcset="<%= data.homeTeamData.strTeamBadgeWebp ?? data.homeTeamData.strTeamBadge %>" type="image/webp">
+                <img width="35" height="auto" src="<%= data.homeTeamData.strTeamBadge %>" alt="<%= data.homeTeamData.strTeam %> logo">
+            </picture>
+
+            <h3><%= data.homeTeamData.strTeam %></h3>
+        </div>
+
+        <div class="game-info">
+            
+            <span class="game-info__time"><%= data.localTime %></span>
+            <span class="game-info__date"><%= !isList ? `${data.dateStringShort}` : data.dateStringShort %></span>
+        </div>
+
+        <div class="team-wrapper">
+            <picture>
+                <source width="35" height="auto" srcset="<%= data.awayTeamData.strTeamBadgeWebp ?? data.awayTeamData.strTeamBadge %>" type="image/webp">
+                <img width="35" height="auto" src="<%= data.awayTeamData.strTeamBadge %>" alt="<%= data.awayTeamData.strTeam %> logo">
+            </picture>
+
+            <h3><%= data.awayTeamData.strTeam %></h3>
+        </div>    
+
         <picture>
-            <source width="35" height="auto" srcset="<%= data.homeTeamData.strTeamBadgeWebp ?? data.homeTeamData.strTeamBadge %>" type="image/webp">
-            <img width="35" height="auto" src="<%= data.homeTeamData.strTeamBadge %>" alt="<%= data.homeTeamData.strTeam %> logo">
+            <source width="240" height="auto" srcset="/static/images/wsl-logo.webp" type="image/webp">
+            <img width="240" height="auto" src="/static/images/wsl-logo.png" alt="FA Womens' Super League">
         </picture>
 
-        <h3><%= data.homeTeamData.strTeam %></h3>
     </div>
-
-    <div class="game-info">
-        <% if (data.strLeague != 'English Womens Super League') { %>
-            <span class="game-info__league"><%= data.strLeague %></span>
-        <% } %>
-        <span class="game-info__time"><%= data.localTime %></span>
-        <span class="game-info__date"><%= !isList ? `${data.dateStringShort}` : data.dateStringShort %></span>
-    </div>
-
-    <div class="team-wrapper">
-        <picture>
-            <source width="35" height="auto" srcset="<%= data.awayTeamData.strTeamBadgeWebp ?? data.awayTeamData.strTeamBadge %>" type="image/webp">
-            <img width="35" height="auto" src="<%= data.awayTeamData.strTeamBadge %>" alt="<%= data.awayTeamData.strTeam %> logo">
-        </picture>
-
-        <h3><%= data.awayTeamData.strTeam %></h3>
-    </div>    
-
-    <picture>
-        <source width="240" height="auto" srcset="/static/images/wsl-logo.webp" type="image/webp">
-        <img width="240" height="auto" src="/static/images/wsl-logo.png" alt="FA Womens' Super League">
-    </picture>
 
     
 <% if (isList) { %>
