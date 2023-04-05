@@ -357,7 +357,7 @@ header::after {
     }
 
     header .logo-wrapper h1 {
-      transform: rotate(-7deg);
+      transform: rotate(-5deg);
       z-index: 100;
     }
 /* =============================================================================
@@ -602,6 +602,7 @@ header::after {
 }
 
     .message p {
+      text-align: center;
         /* opacity: 30%; */
         font-weight: 600;
     }

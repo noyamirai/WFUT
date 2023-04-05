@@ -1,9 +1,12 @@
-<h2>Upcoming games</h2>
-
 <% if (data.length == 0) { %>
  
-    <p>No event found :(</p>
+    <div class="message">
+        <%- include ('message.ejs', { messageTitle: 'International break?', messageSubTitle: "Sorry, we couldn't find any upcoming events!" }) -%>
+    </div>
+
 <% } else {%>
+    <h2>Upcoming games</h2>
+
     <% for(let key in data) {%>
         <h3><%= key %></h3>
         <ul>

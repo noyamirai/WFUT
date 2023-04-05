@@ -185,7 +185,7 @@ class TeamClass {
         if (!eventJsonData)
             eventJsonData = await this.API.getJsonData(`eventsnextleague.php?id=${this.leagueId}`);
 
-        if (eventJsonData.failed)
+        if (eventJsonData.length == 0)
             return [];
         
         let gamesByDate = {};
