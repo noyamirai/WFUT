@@ -3,6 +3,7 @@
 temp/*
 !.gitkeep
 ./static
+/static
 
 node.log
 
